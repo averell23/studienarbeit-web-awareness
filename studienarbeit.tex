@@ -40,7 +40,8 @@
     
     Although
     information about the \textit{visits} is readily available in the
-    form of web server logs, the tools for displaying it (e.g. AWStats) will only
+    form of web server logs, the usual tools for displaying it (e.g. AWStats 
+    FIXME:CITE) will only
     provide statistical information but do not explore the rich context in which
     the visits took place. (FIXME:MIT VISIT FLOW PAPER)
     
@@ -58,11 +59,33 @@
     explore different types of \textit{territories} that in some way adjacent to
     the host's place.
     
+    The notion of \emph{relations} between web places is not an entirely new 
+    one: In one noteable paper FIXME and FIXME FIXME:CITE they researched the 
+    relations that are formed by hyperlinks between pages. They not only found 
+    evidence that a hyperlink indicates a social relation, but also that 
+    clusters of hyperlinked pages indicate social groups that can be identified 
+    with relative ease. These findings are important for the current work, 
+    since they prove the way of exploring relations is a viable one. FIXME and 
+    FIMXME's main interest was, however, in showing that meaningful relations 
+    between pages exists at all and to identify groups of related pages. They 
+    did not suggest that their findings should be used for any particalar 
+    applications or propose how they should be presented to an end user. The 
+    DoorStep system, on the other hand, is based on the assumption that 
+    meaningful relations between web places do exist but does not concern itself 
+    with the exact nature of those relations -- in fact, the system is designed 
+    to work with almost all imaginable kinds of relations. What we propose is an 
+    efficient way to exploit exisiting relations, connect them to visit events 
+    and prepare the results in way that makes it easy to present them to an end 
+    user.
+    
+    Again, the DoorStep system itself does not concern itself with the exact 
+    nature of the end user display. And while we propose the use of an ambient 
+    display (similiar to that intruduced in FIXME), the system allows for many 
+    different ways of displaying the results.
+    
     We will introduce a system for finding places that are \textit{related} to
     visitors and will present the results which we gathered from a first
     implementation of this system.
-    
-    (FIXME:Some papers on standard web Techniques WWW10)
   \section{The DoorStep System}
     DoorStep is a system that attempts to find \textit{places} which are somehow
     \textit{related} to \textit{visits}. We assume that each
@@ -411,41 +434,90 @@
        \verb$User-Agent:$ string and all visits by that agent are filtered out 
        before the processing starts.
   \section{Examples of relations}
-    These are some examples of relations between URLs that can (or have) been
-    used in implementations of the system.
+    This section will, rather than trying to do an in-depth analysis, give some 
+    comprehensive examples of relations between web places and explore their 
+    possible meaning. We expected that most of the relations used in the 
+    DoorStep system will be taken from independent research and that the quality 
+    of such relations will be extensively analyzed in papers like FIXME:Cite.
     \\
     
-    \textbf{Relation by domain and keywords:} URLs will be called related if
-    they are in the same sub domain and are all found by a web search engine
-    searching for certain keywords. Instead requiring the URLs to be in the same
-    sub domain this kind of relation may also specify that they serve documents
-    in the same language or have something else in common.
+    \textbf{Relation by hyperlinks:} These are probably the best understood and 
+    most researched of all relations. Hyperlinks have several properties that 
+    make them interesting to use in the DoorStep system: Hyperlinks are usually 
+    set by people (rather than machines) and therefore denote social rather than 
+    technical relations between web places. FIXME and FIXME showed that 
+    social groups can be identified by analyzing groups of hyperlinked web 
+    pages. Hyperlinks are also very easily handle; no additional information is 
+    needed to follow a hyperlink to another web page and thus the respective 
+    relation finder does not need a complicated heuristic.
     \\
     
-    \textbf{Relation by links:} Two URLs are related if at least one hyper link
-    exists from one of them to the other.
+    \textbf{Relation by domain:} DNS (sub-)domains usually denote geographic or 
+    organizational groups. These can be very broad like the \verb$.com$ top 
+    level domain, or quite specific like the \verb$computing.lancs.ac.uk$ domain 
+    which contains the machines of the Lancaster University's computing 
+    department. Finding web places within the same domain is not as 
+    straightforward as following hyperlinks, the heuristic currently employed 
+    in the DoorStep system is to query a commercial search engine for certain 
+    keywords and restrict the search to a specific domain. This method also 
+    ensures that the pages found by the relation finder are likely to be 
+    interesting to the end user.
     \\
     
-    \textbf{Relation by referral:} Two URLs are related if one of them referred
-    a visitor to the other one (note that this is very close to the Relation by
-    links).
+    \textbf{Relation by language:} Web places serving resource in the same 
+    language usually come from the same (albeit very broad) cultural background. 
+    For example, a page in Japanese language is usually written by a Japanese 
+    person. Additional, the user of the DoorStep system may only understand 
+    documents in certain languages and it may not be sensible to present him web 
+    places that he cannot comprehend. The heuristic used for finding places with 
+    a common language is the same as for finding pages in the same domain: Many 
+    search engines allow to restrict the search to pages of a specific language.
     \\
     
-    \textbf{Relation by referring search query:} Two URLs are related if they
-    show up in the result of the same search engine query that referred a
-    visitor to one of them.
+    \textbf{Relation by referring search query:} As explained above, the 
+    contents of the \verb$Referer:$ header (if existent) are retained within the 
+    starting URL found in the first step. When a visitor was refered by a search 
+    engine, the \verb$Referer:$ header will usually not only contain the 
+    engine's URL, but the complete query string. This information allows a 
+    relation finder to reproduce the search query and find out what other web 
+    place (except our own) were returned by it. These places are related to the 
+    starting URL in the way that \textit{a visitor from or near this place was 
+    potentially interested in them} and they are related to our own place in the 
+    way that they show up in the result of the same search query.
     \\
     
-    The use of web search engines (like Google \cite{google}) is a powerful tool
-    and has already been employed in previous research \cite{webaware}. It is an
-    easy (and often the only possible) way to find related URLs that may be
-    anywhere on the web. 
+    \textbf{Relations from search engines:} Web search engines often maintain 
+    their own notion of \lq\lq related\rq\rq\ pages, like Google's 
+    \lq\lq Find related\rq\rq\ feature. While the exact definition of those 
+    relations is hidden within the search engine a relation finder can very 
+    easily exploit them -- simply by querying the search engine.
+    \\
     
-    Each search query on such an engine requires that keywords are given to
-    restrict the search. Those keywords may either be statically defined in the
-    system or may be dynamically obtained from the web places the system is
-    working on.
+    \textbf{Relation by similiar hostname:} Some researchers (like FIXME:CITE) 
+    treat web places with similiar host names as related. For example they 
+    assume that hostnames with the same prefix (like \verb$www.apple.com$ and
+    \verb$www.apple.co.uk$) belong to the same organization. A heuristic for 
+    finding this kind of relation could be somewhat more complicated since most 
+    commercial search engines lack these kind of query options.
+    \\
+    
+    For those heuristics that employ the use of search engines, it is important 
+    to carefully select the search keywords. While the simplest method is to use 
+    a set of static keywords which are deemed to be interesting to the user, 
+    more sophisticated algorithms could also select new keywords from the web 
+    places that have already been found.
   \section{Examples of rating functions}
+    There is a lot of research on rating functions, and a lot of different 
+    approaches have been published (FIXME:CITE). Although rating functions from 
+    the literature may perform well, they are usually also quite complex and 
+    require a lot of processing. Many, like the popular Link Rating (FIXME:CITE) 
+    even require a more or less complete web index, something that is difficult 
+    to build and maintain outside a lab enviroment. For this reason we will not 
+    discuss those functions here, and instead present some simpler, home-grown 
+    functions that are easy to implement and still perform reasonably well 
+    within the DoorStep system. Nonetheless, it is always possible to enhance 
+    the system with some more advanced rating functions if desired.
+  
     \textbf{Keywords matching META tags:} This function can be used if the
     resource served by an URL is a HTML document containing tags of the form
     \verb$<meta name="keywords" content="keyword1,keyword2,..." />$ 
@@ -470,11 +542,32 @@
     \[
       f_{\mbox{key}}(u) = \sum_{k_i \in u} \frac{w(n(k_i))}{n}
     \]
+    In the testbed implementation we then used a logarithmical function for 
+    $w()$ that will quickly increase with the first few occurences of a 
+    keyword but raise the rating more slowly if a huge number of occurences is 
+    involved:
+    \[
+      FIXME
+    \]
+    It showed that for most pages this method worked well, and with well-chosen 
+    keywords and could distiguish pages that only dealt with the topic 
+    marginally (like researcher's personal home pages) with those that covered 
+    it extensively (like conference home pages).
     \\
     
-    \textbf{Language or Domain match:} The URL is assigned a fixed
-    rating if the resource is in a specific language or the URL is a
-    specific DNS domain (or something similar).
+    \textbf{Language or Domain match:} When one assumes that pages in a specific 
+    language, within a specific domain or with some other static property or 
+    more interesting to the user than others, a rating function can assign a 
+    fixed rating to those pages.
+    \\
+    
+    \textbf{Use search engine rating:} Most commercial search engines employ a 
+    number of advance rating techniques, since it is the rating that really 
+    distinguishes a good engine from a bad one. Although those mechanisms are 
+    usually kept secret and cannot be accessed directly they are reflected in 
+    the result of the search query. A rating function can exploit this property 
+    and assign a higher rating to pages that show up at the top of the search 
+    results than to those on the bottom.
   \section{System Performance Analysis}
     \subsection{Testbed Architecture}
       In order to evaluate our assumptions, we implemented a testbed that 
@@ -653,30 +746,62 @@
       always rank well, since the the rating functions use the same keywords. We 
       also found that places related to well-rated URLs 
       * Will they also rank well?
-  \section{Privacy: Reassuring the conciderations}
-    When explaining this projects to people outside the research community, more
-    often than not they would bring up privacy concerns. For example during a
-    presentation a student would ask if \lq\lq this is doggy ground\rq\rq\ ,
-    other people referred to the procedure as \lq\lq peeping\rq\rq\ or even
-    \lq\lq spying\rq\rq . Despite the fact that information about visitors is
-    recorded almost everywhere on the web and secret spying mechanisms are
-    quite common, many people still believed that it is a place of anonymity
-    where their actions go unnoticed. When confronted with the fact
-    that sensitive information can be collected without their knowledge, within a system that they do not
-    understand, they react with anxiety.
+  \section{Privacy: Reassuring the Visitors}
+    A system that, like DoorStep, collects and analyzes user data most always 
+    take privacy considerations into account. 
     
-    Legally, the DoorStep system is \lq\lq safe\rq\rq , because it does not 
-    collect personal information. Nevertheless, as professionals working in the 
-    field we have a responsibility to set standards for the handling of 
-    sensitive information and to educate users about the dangers and benefits 
-    involved with the new technologies. For the DoorStep system an informational 
-    note, informing visitors about the tracking process, should be sufficient. 
-    Still, information within web server log files should always be dealt with 
-    cautiously: \textit{People using the HTTP protocol to provide data are 
-    responsible for ensuring that such material is not distributed without the 
-    permission of any individuals that are identifiable by the published 
-    results}. \cite{http}\cite[Apache web server wins Big Brother Award]{bigBro} 
-    \section{Conclusions and Further Work} In this work we showed that, using 
+    In practice, usage data falls into two broad categories: Statistical usage 
+    data which cannot be linked to any particular user, and is therefore less 
+    confidential, and personal data which can identify the 
+    person to which the data \lq\lq belongs\rq\rq . The personal data is 
+    sometimes further divided according to confidentiality: While the address or 
+    phone number of a person is usually publicly known, medical records should 
+    be kept strictly confidential. It is generally agreed that it is the 
+    responsibility of the operator of any data processing service to safeguard 
+    sensitive personal data, although not always on the methods with which this 
+    can be achieved. 
+    
+    Due to technical and legal requirements, a lot of sensitive personal 
+    information is stored within web server log files. Each request will be 
+    logged on all machines along it's way, and if this log information is 
+    combined it is not only possible to link each page view to a particular 
+    person but also to create a profile of that person's behaviour on the web. 
+    And although the extent of the logging is by no means a secret, the majority 
+    of web users is not aware of it, still thinking they are anonymous; even 
+    those who are aware of the logging are under the impression that the logs 
+    will probably never be read.
+    
+    Since the web server log files contain highly sensitive data, their use is 
+    regulated by tight regulations in many parts of the world. Despite the fact 
+    that some countries (like the USA) leave privacy considerations largely to 
+    the forces of the market, others have imposed a rather strict legislation: 
+    In Germany, for example, even if the log data has been collected legally, it 
+    still be illegal to use it for purposes the visitor has not agreed to, or 
+    the data is anonymized.
+    
+    The DoorStep system may still be safely employed in those countries, since 
+    it treats the log data as anonymous and does not present any personal data 
+    to the user (the web pages that are displayed by the system can hardly be 
+    regarded as confidential information). Nevertheless, care should be taking 
+    in employing such systems: Not only is IT law often a doggy ground, but an 
+    improper application of the system may also damage reputation of the 
+    operator: Even though most users are quite oblivious of privacy 
+    considerations in areas they fell \lq\lq safe\rq\rq\ in, they often are very 
+    careful about new developments (e.g. student's comments about the current 
+    project ranged from \lq\lq doggy ground\rq\rq\ to \lq\lq Big Brother\rq\rq 
+    ).
+    
+    Engineers are often surprisingly aware of the privacy implications of their 
+    inventions, and many specification documents warn against the abuse of 
+    certain features -- like, for example, the HTTP specification\cite{http}:
+    
+    FIXME:QUOTE
+    
+    If the DoorStep (or a similiar) system sees widespread use, the safest and 
+    most honest thing to do is to include some option into the visitors user 
+    agent to disable the DoorStep processing, and the user agent would then 
+    signal DoorStep to ignore the visit.
+  \section{Conclusions and Further Work} In this work we showed that, using 
     the notion of \textit{relations} between web places, it is possible to build 
     a system that can help to visualize the connections between a site and the 
     visitors. The system should renew the hosts' interest in maintaing his own 
