@@ -1,0 +1,145 @@
+Idea Scrabble File
+Daniel Hahn
+
+DECISIONS IN THE DIFFERENT AREAS (Subject to sudden change of mind ;-)
+
+PART 0: WHERE TO GO
+	-> Interesting information: Visitor's website, Further websites with
+	   similiar topics
+	-> Not so interesting information: Visitor Flows, Profiling information
+	-> Interesting visitors: "Foreigners" (not from own domain)
+	-> Not so interesting visitors: "In-House" people
+PART 1: COLLECT INFORMATION
+	-> Probably stay with what we have (= logfiles)
+PART 2: FILTER/SELECT INFORMATION
+	-> Won't need bot's visits
+	-> Won't need anonymous visits
+	-> Won't need local visits
+
+*** FOLLOWING: IMPLEMENTATION - SPECIFIC BRAINSTORM ***
+
+PART 1: Check the logfile out, get URLs
+* Try the domain name given
+* Try the ip adresses
+* Can you do something sensible with the REFERRERS?
+* Is it sensible to use traceroute information?
+* Is there any other log information that may be useful?
+* Timeframe for log analysis? (How far into the past?)
+* Sensible incremental updates (can't always rebuild all internal data when 
+  creating a result...)
+
+	PART 1A: Filter the logfile
+		* Remove searchbot accesses (how to recognize them?)
+		* Remove accesses to pictures etc, which are loaded from pages
+	PART 1B: Lookup procedure (idea)
+		* Plain IP <-> Hostname?
+		* If Plain  IP -> Try reverse lookup
+		               -> If not successful, try traceroute, maybe 2
+			          or 3 hops off
+			       -> Result: Valid Domain name or Hostname
+                * If hostname -> Use the Domain name part directly
+		* Domain name found -> Start cycling down through sub-domains
+		                    -> Record active web servers found
+		* Keep metadata around to speed up the process.
+
+
+	PART 1C: Lookup hints
+		* Caches or unuseful servers may send something different
+		  than text/html
+		* Institutions tend to have an IP range
+		* hostnames may be aliases
+		* Sites may host, but not have a main homepage 
+		  (=> Check for 404s)
+PART 2: Refining the data
+
+* Match the found URLs against own site for ranking them.
+	* Probable match conditions:
+		- Keywords
+		- Linked URLs
+		- Difference function of some kind?
+* Probably search for additional web sites, using REFERRER information and
+  domain names.
+* Probably use bookmarked information, too.
+* Probably search linked pages, too.
+* Papers on dinstance measuring www conference/natural language processing
+
+PART 3: Presenting the data
+
+* How often do you update the data?
+* "Site of the day"?
+* Use a webpad with wireless access and check how people use it.
+* Test the usefulness of the data.
+
+ADDENDUM: General Brainstorming
+
+* Use a Apache plugin to retrieve and present data on the fly?
+* Use appropriate module for search engine access.
+* Observations:
+	* Most frequent accesses are from searchbots
+	* Most frequent referals are from own pages, then search engines
+* Most frequent IP adresses MAY be accesses from private dialups, MAY also be
+  private (SPAM) search engines.There MAY also be regular search engines.(Saw
+  one ;-) MAY also be cache agents
+* Should we try to learn the topology of the network?
+* Distribution through time, space and ???
+
+ADDENDUM: SNIPPETS
+**** From HTTP/1.1 RFC
+15.1 Personal Information
+
+   HTTP clients are often privy to large amounts of personal information
+   (e.g. the user's name, location, mail address, passwords, encryption
+   keys, etc.), and SHOULD be very careful to prevent unintentional
+   leakage of this information via the HTTP protocol to other sources.
+   We very strongly recommend that a convenient interface be provided
+   for the user to control dissemination of such information, and that
+   designers and implementors be particularly careful in this area.
+   History shows that errors in this area often create serious security
+   and/or privacy problems and generate highly adverse publicity for the
+   implementor's company.
+
+15.1.1 Abuse of Server Log Information
+
+   A server is in the position to save personal data about a user's
+   requests which might identify their reading patterns or subjects of
+   interest. This information is clearly confidential in nature and its
+   handling can be constrained by law in certain countries. People using
+   the HTTP protocol to provide data are responsible for ensuring that
+   such material is not distributed without the permission of any
+   individuals that are identifiable by the published results.
+   
+   [...]
+   
+    The Referer header allows reading patterns to be studied and reverse
+   links drawn. Although it can be very useful, its power can be abused
+   if user details are not separated from the information contained in
+   the Referer. Even when the personal information has been removed, the
+   Referer header might indicate a private document's URI whose
+   publication would be inappropriate.
+   
+**** END OF CITATION ***
+
+GLOSSARY
+
+thing 	- 	some random information we learn about a visitor
+visit	-	the action of visiting a web site. could correspond to a logfile
+		line.
+visitor	-	Entity visiting a web site
+
+PERL MODULES INSTALLED
+
+LWP::UserAgent; 
+HTTP::Request; 
+HTTP::Response; 
+(libwww)
+DBI
+DBD::mysql
+
+SOFTWARE INSTALLED
+JDK 1.4.0
+JAKARTA ANT 1.4.1
+
+BOOKS NEEDED:
+Perl Programming
+
+

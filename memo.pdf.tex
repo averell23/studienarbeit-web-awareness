@@ -1,0 +1,174 @@
+\documentclass[a4paper]{danarticle}
+\usepackage{a4}
+\pagestyle{headings}
+\sloppy
+ 
+ 
+\begin{document}
+  \author{Daniel Hahn}
+  \title{Memo: Things about visitors}
+  \maketitle
+ 
+  \begin{abstract}
+     These is a memo to structure some ideas, and it's a work in 
+     progress. \textbf{Comments are always welcome:} dhahn@gmx.de
+  \end{abstract}
+ 
+  \section*{What it is about}
+\pdfdest num 1 fitbh
+    The whole topic is quite broad, but loosely the following stuff needs to be
+    done:
+    \begin{itemize}
+      \item{find out \textit{things} about the visitors to our site.}
+      \item{filter out the \textit{things} needed.}
+      \item{present the the \textit{things} to the user in a friendly way.}
+    \end{itemize} 
+    Sounds vague? Don't know what a \textit{thing} is? Well, at the moment it
+    could be almost anything: Information about the user himself\footnote{No pun
+    intended to the ladies, but in this case I'm writing the text as if the
+    visitor is a male geek. She could also be a female geek, though.}, the user's
+    homepage or other places on the web the user has connections with.
+    The \textit{things} we are looking for will depend on what the system
+    should achieve. Some possibilities include:
+    \begin{itemize}
+       \item{Just making the host aware of the visitors, or the number of
+             visitors.}
+       \item{Making the host aware of patterns in the visitor's behaviour.}
+       \item{Actually pointing the host to a single visitor, getting as close
+             as possible.}
+       \item{Use information learned from the visitor to find interesting
+             places on the web.}
+       \item{Try provide an entry into a community that both the host and
+             the visitor are part of.}
+    \end{itemize}
+    All theses things are probably interesting to explore, but the scope of a
+    Studienarbeit will probably only allow to implement one of them.
+  \section*{Find things}
+\pdfdest num 2 fitbh
+    There are several sources of information that could be tapped to learn more
+    about the visitor. For now we assume from all these sources we can learn
+    something about \textit{visits}, where a \textit{visit} is the action of
+    actually looking at a web page. (A line in a log file would correspond to 
+    a \textit{visit}).
+    \subsection*{Logfiles}
+\pdfdest num 3 fitbh
+      Web server logfiles contain a record for each request that has been
+      served. In the best case, there is information about the \textbf{hostname}
+      or \textbf{ip address} the request came from, a \textbf{timestamp}, a
+      \textbf{status} indication (if the transaction was successful or not),
+      information about the \textbf{user agent} that made the request and also
+      about the \textbf{referring page}, which sent the user to this server.
+      
+      If a users logs into a site using built-in security mechanisms, the
+      respective \textbf{username} could also be made available.
+      
+      In addition, by looking at the whole logfile we could also answer
+      questions like: \textit{How often does a visitor come back?} or \textit{What
+      type of visitor is this?}
+    \subsection*{Transfer of additional information(through protocol extensions)}
+\pdfdest num 4 fitbh
+      Although there is a lot of data available in the logfile, it is not meant
+      to lead to interesting places. An obvious solution would be to extend the
+      http protocol, to allow the visitor (or rather, his user agent) to provide
+      additional information. Interesting information could include: The
+      visitor's \textbf{most frequently visited site}, his \textbf{bookmark
+      collection} or simply his \textbf{own homepage}. 
+      
+      The major setback (apart from privacy considerations) of this approach is
+      that it depends on modifications both in the server and the user agent.
+    \subsection*{User provided information} 
+\pdfdest num 5 fitbh
+      Users often provide useful information themselves: By writing
+      \textbf{guestbook} entries, by \textbf{signing up} for services or by completing
+      \textbf{surveys}.
+    \subsection*{Secondary sources - the web and more}
+\pdfdest num 6 fitbh
+      Once we learned some information about a visit, we can always try to look
+      up more interesting facts. Of course a \textbf{WWW search} is the most
+      obvious example, but we could also use things like \textbf{local
+      databases}, \textbf{traceroute information} or \textbf{WHOIS lookups} to
+      name but a few.
+      
+      Another source of secondary information may be the \textbf{host himself}
+      who can tell the system which results he liked best (or worst).
+  \section*{Select the things to play with}
+\pdfdest num 7 fitbh
+    Once we have gathered information about a lot of visits we will find that
+    most of it is probably not very interesting in a given context. For example,
+    although a \textit{visit} by a search robot is an interesting thing for some
+    webmasters, the same \textit{visit} is quite uninteresting if you are looking
+    for visitors with the same interests than the host.\footnote{Unless the host
+    is interested in indexing web pages all day, of course...}
+    \subsection*{Look at the things you got}
+\pdfdest num 8 fitbh
+      The first step could be a classification of each \textit{visit}. Taking into
+      account the information learned both from this visit and previous visits
+      we could start asking questions like: \textbf{What kind of visitor is
+      this?} \textbf{What is he looking at?} or \textbf{Did he come from a
+      university?}
+    \subsection*{Throw away the unwanted things}
+\pdfdest num 9 fitbh
+      Once we have learned a lot of \textit{things} about our visitors, 
+      we are likely to
+      throw out the things we don't need. For example, we could now eliminate
+      visitors which are \textbf{searchbots}, come from a certain
+      \textbf{service provider} and so on.
+    \subsection*{Rank the things remaining}
+\pdfdest num 10 fitbh
+      Once we have a set of \textit{things} that is potentially interesting, 
+      we want to
+      rank them (the most interesting first...) Indications for the quality of a
+      thing could include: The \textbf{type of the visitor}, the \textbf{number
+      of visits} by that visitor, \textbf{similiarity} to our own page, and many
+      more...
+  \section*{Dish out the good things}
+\pdfdest num 11 fitbh
+    Once we have selected the most interesting \textit{things} for our 
+    purpose (whatever
+    that may be), we are ready to present them to the interested public.
+    \subsection*{Web page}
+\pdfdest num 12 fitbh
+      The simplest approach to present the results. This could be a page that
+      the host explicitly calls to learn about the visitors. This could also be
+      a small frame/overlay in an existing page that feeds the results back to
+      visitors and hosts alike.
+    \subsection*{Ambient display/Installation}
+\pdfdest num 13 fitbh
+      A gentler method of making the host aware of the visitors could be an
+      ambient display. This could be as simple as a light that grows brighter
+      when more visitors come, or very sophisticated as an "artwork" that
+      actually conveys a lot of information.
+    \subsection*{Community display}
+\pdfdest num 14 fitbh
+      This could be a display that stays in the background (like an ambient
+      display) but uses a lower level of abstraction and allows the user to
+      actually surf into the pages if he chooses to do so.
+    \subsection*{Personal display}
+\pdfdest num 15 fitbh
+      This would probably consist of something as a web pad, working much like
+      the community display does but intended to be used rather like a
+      newspaper.
+\pdfoutline goto num 1 count -0 {What it is about}
+\pdfoutline goto num 2 count -4 {Find things}
+\pdfoutline goto num 3 {Logfiles}
+\pdfoutline goto num 4 {Transfer of additional information(through protocol extensions)}
+\pdfoutline goto num 5 {User provided information}
+\pdfoutline goto num 6 {Secondary sources - the web and more}
+\pdfoutline goto num 7 count -3 {Select the things to play with}
+\pdfoutline goto num 8 {Look at the things you got}
+\pdfoutline goto num 9 {Throw away the unwanted things}
+\pdfoutline goto num 10 {Rank the things remaining}
+\pdfoutline goto num 11 count -4 {Dish out the good things}
+\pdfoutline goto num 12 {Web page}
+\pdfoutline goto num 13 {Ambient display/Installation}
+\pdfoutline goto num 14 {Community display}
+\pdfoutline goto num 15 {Personal display}
+
+\pdfinfo{
+  /Author (Daniel Hahn)
+  /Title (Memo: Things about visitors)
+  /Creator(TeX automated)
+  /Producer(pdfTeX)
+}
+
+\end{document}

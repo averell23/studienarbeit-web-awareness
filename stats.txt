@@ -1,0 +1,90 @@
+Vital Stats, raw logfile
+
+Lines in the logfile:				198072		(100%)
+of those ip adresses				110503		(55.8%)
+of those hostnames				87569		(44.2%)
+
+Requests resulting in error			2689		(1.3%)
+Request for pictures (%gif)			65376		(33%)
+
+Lines without referer information		39962		(20.2%)
+Referrals from any teco.* host/domain		152721		(77%)
+
+Referals by search engines			~ 4000		(2%)
+Google						2883
+MSN						171
+Altavista					240
+Lycos						61
+Yahoo						401
+AOL Search					21
+Excite						35
+Northernlight					10
+Other (aprrox)					225
+
+
+Visits by know Bots/Crawlers			17533		(8.9%)
+(appoximation, not including most web download tools)
+SQL QUERY: [1]
+
+Some popular download tools			2096		(1.1%)
+(approximation, GetRight, FlashGet, Wget, w3mir, MSIECrawler)
+SQL QUERY: [2]
+
+Most popular documents (%gif filtered out)
+Homepage (/index.html, /)			3080		(1.6%)
+/~cdecker/*					49070		(24.8%)
+/~cdecker/webchip/*				48496		(24.5%)
+/~albrecht/					58764		(29.7%)
+/~albrecht/publication/*			49934		(25.2%)
+/~albrecht/publication/networked-artifacts/*	45757		(23.1%)
+/lehre/*					21087		(10.6%)
+other popular user hompages 			2000+
+(ringwald, gaedke, michael)			
+other user homepages (e.g. krebs, markus)	500 - 1000
+other projects (/huc/, /tea/)			700 - 2500
+
+
+Vital Stats, cleaned logfile
+(Removed from original lofile: Errors, gifs, referrals within domain)
+
+Lines in the logfile:				41712	(100%)
+						21,1% of original logfile
+of those ip addresses				7534	(18.1%)
+of those hostnames				34178	(81.9%)
+Lines without referer information		36248	(86.9%)
+
+Referals by search engines			~3500	(~8%)
+Google						2374	(5.7%)
+MSN						169
+Altavista					222
+Lycos						61
+Yahoo						376
+AOL Search					21
+Excite						35
+Northernlight					9
+Other (aprrox)					215			
+
+
+Visits by know Bots/Crawlers			16520	(39.6%)
+(appoximation, not including most web download tools)
+SQL QUERY: [1]
+
+Some popular download tools			633	(1.5%)
+(approximation, GetRight, FlashGet, Wget, w3mir, MSIECrawler)
+SQL QUERY: [2]
+
+Most popular documents
+Homepage (/index.html, /)			3237	(7.7%)
+/~cdecker/*					3228	(7.7%)
+/~cdecker/webchip/*				2874	(6.9%)
+/~albrecht/					6734	(16.1%)
+/~albrecht/publication/*			2656	(6.4%)
+/~albrecht/publication/networked-artifacts/*	210
+/lehre/*					11753 	(28.2%)
+other popular user hompages 			1000-1500 (~ringwald dropped to 609)
+(ringwald, gaedke, michael)
+other user homepages (e.g. krebs, markus)	100 - 500
+other projects (/huc/, /tea/)			huc: 1105 tea: 148
+
+[1] select distinct count(*) from log where user_agent like "%WebCrawler%" or user_agent like "%Bot%" or user_agent like "%Gulliver%" or user_agent like "%Scooter%" or user_agent like "%Slurp%";
+[2] select count(*) as number from log where user_agent like "%GetRight%" or user_agent like "%w3mir%" or user_agent like "%FlashGet%" or user_agent like "%wget%" or user_agent like "%MSIECrawler%";
