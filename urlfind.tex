@@ -1,5 +1,8 @@
 \documentclass[a4paper]{danarticle}
 \usepackage{a4}
+\usepackage[dvips]{color}
+\usepackage[dvips]{graphicx}
+\usepackage{amsthm}
 \pagestyle{headings}
 \sloppy
  
@@ -45,7 +48,11 @@
     interest\rq .} 
     
   \section*{System overview}
-    // FIXME: System figure
+    \begin{figure}
+      \centering
+      \includegraphics[width=10cm]{steps_overview.eps}
+      \caption{System Overview}
+    \end{figure}
   \section*{Step one: Find the starting point}
     Our system attempts to find URLs which are \textit{related} to
     a given visit. However, it is much more difficult to describe
@@ -88,6 +95,11 @@
       an IP address we say that an URL is \textit{closer} to one
       in the same subnet than to one on a different network.
   \section*{Step Two: Finding Related URLs}
+     \begin{figure}
+       \centering
+       \includegraphics[width=10cm]{relations.eps}
+       \caption{Data flow through multiple relation-finding instances}
+     \end{figure}
      This is the meat and bones of the system: Starting with the
      URL we found in the first step we will start to search for
      URL that \textbf{are related to the starting URL}
