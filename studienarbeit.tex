@@ -24,7 +24,7 @@
   \title{DoorStep: A system for visitor awareness}
   \maketitle
   
-  \section*{Introduction}
+  \section{Introduction}
     In recent years, the World Wide Web has become more than just a collection
     of static documents, or even a collection of services. It is now perceived
     as a \textit{social space}, where the \textit{netizens} build virtual
@@ -59,7 +59,7 @@
     We will introduce a system for finding places that are \textit{related} to
     visitors and will present the results which we gathered from a first
     implementation of this system.
-  \section*{The DoorStep System}
+  \section{The DoorStep System}
     DoorStep is a system that attempts to find \textit{places} which are somehow
     \textit{related} to \textit{visits}. We assume that each
     of this \textit{places} can be described by an URL of the form described in
@@ -89,7 +89,7 @@
     from a visitor in the \verb$.co.uk$ domain can be assumed to come from
     Britain. Both the primary and secondary information may be used for finding
     relationships.
-    \subsection*{System overview}
+    \subsection{System overview}
       The system has three processing steps: Once a visit is received,
       it will determine an URL that acts as a starting point.
       Then multiple \textit{relation finder} instances will start to
@@ -104,7 +104,7 @@
 	\caption{Major processing steps of DoorStep}
 	\label{steps_overview}
       \end{figure}
-    \subsection*{Finding a starting place}
+    \subsection{Finding a starting place}
        \begin{figure}[ht]
        \centering
 	 \includegraphics[width=10cm]{startingplace}
@@ -147,7 +147,7 @@
        one can define hosts in the same IP
        subnet as \textit{close}, but it is very unlikely that hosts without an
        DNS host names will be interesting places anyway.
-     \subsection*{Finding related places}
+     \subsection{Finding related places}
        The central step is to find URLs that are \textit{related} to the
        starting URL. 
        \begin{definition}
@@ -191,7 +191,7 @@
        relation finding process each relation finder may either pass it's output to
        any other relation finders (including itself) \textit{or} to
        the output, allowing for a very flexible setup (Figure \ref{relations}). 
-     \subsection*{Degrees of relationship}
+     \subsection{Degrees of relationship}
        \begin{figure}[ht]
        \centering
 	 \includegraphics[width=10cm]{degrees}
@@ -216,7 +216,7 @@
        relationship gives us an intuitive measure of the \lq\lq distance\rq\rq\
        from the starting point and has proven to be useful for actual
        implementations of the system.
-     \subsection*{Rating function}
+     \subsection{Rating function}
        Once a set of related URLs is found, one or more 
        \textit{rating functions} will be applied to the URLs. The goal
        of this step is to identify those web places which are the
@@ -247,14 +247,14 @@
        An rating value of 1 indicates a most interesting web place
        while a
        value of 0 denotes a very uninteresting one. 
-     \subsection*{Filtering}
+     \subsection{Filtering}
        The system allows for filters to be inserted between the different
        processing steps. A filter will typically check if an URL matches a
        predefined condition and discard it if it doesn't.
        
        Filtering does not change the system in any substantial way but was added
        to remove \lq noise\rq\ and speed up processing.
-  \section*{Examples of relations}
+  \section{Examples of relations}
     These are some examples of relations between URLs that can (or have) been
     used in implementations of the system.
     \\
@@ -289,7 +289,7 @@
     restrict the search. Those keywords may either be statically defined in the
     system or may be dynamically obtained from the web places the system is
     working on.
-  \section*{Examples of rating functions}
+  \section{Examples of rating functions}
     \textbf{Keywords matching META tags:} This function can be used if the
     resource served by an URL is a HTML document containing tags of the form
     \verb$<meta name="keywords" content="keyword1,keyword2,..." />$ 
@@ -319,16 +319,21 @@
     \textbf{Language or Domain match:} The URL is assigned a fixed
     rating if the resource is in a specific language or the URL is a
     specific DNS domain (or something similar).
-  \section*{Test Platform}
-    For practical test we created a testbed architecture allowing flexible
-    configuration and easy deployment of new relation finders and
-    rating functions. The architecture consists of an XML format for
-    data exchange between the modules and a Java framework containing the basic
-    functionality.
-    \subsection*{The XML format}
-      There are two different XML formats, one to describe the visits themselves
-      and one to describe URLs (or web places). Any module that reads and/or
-      writes these formats can be integrated into the system.
+  \section{System Performance Analysis}
+    \subsection{Testbed Architecture}
+      In order to evaluate our assumptions, we implemented a testbed that 
+      allowed us to test the DoorStep system in a real-life enviroment, using 
+      the relations and rating functions given in the examples sections (FIXME: 
+      Refer to sections).
+      
+      The testbed consists of a collection of modules, exchanging XML formatted 
+      data: There is one XML format to describe generic \textit{visit events} 
+      (Figure \ref{visitxml}) while another is used to describe \textit{web 
+      places} (i.e. URLs, Figure \ref{urlxml}). Each module will read XML 
+      documents of one of those formats and will produce a document in the URL 
+      description format as an output.
+      
+      
       \begin{figure}[h]
 \begin{verbatim}
 <visitlist>
@@ -365,63 +370,61 @@
         \caption{XML format for URLs (web places)}
 	\label{urlxml}
       \end{figure}
-    \subsection*{System setup}
-      Each module in the system will either convert a list of visits into a list
-      of URLs or modify an existing URL list. The first type of module is called
-      an \textit{extractor} and will perform the \lq\lq Find An Starting
-      URL\rq\rq\ step, while the latter is called a \textit{refiner} and is used
-      to implement relation finders and rating functions.
       
-      The modules are arranged in a chain: An extractor will be at the head of
-      the chain, producing a list of starting URLs. The data will then be passed
-      to any number of refiner modules which do the relation finding and
-      calculate the rating. The data can then be passed on to a display
-      module.
-    
-      To allow a flexible setup of the refiners, each refiner can be configured
-      to ignore (i.e. pass through) all URLs above a certain degree of
-      relationship. This feature allows to emulate the flexible approach
-      shown in Figure \ref{relations}.
-    \subsection*{Data acquisition}
-      The input data for the system can either be provided as a static XML file,
-      or may be dynamically retrieved from an URL that serves an XML page with
-      the latest data.
+      The modules will be arranged in a daisy-chain, with a visit-to-url module 
+      (called an \textit{extractor} at the head of the chain and any number of 
+      url-to-url modules (called \textit{refiners}) following. The contract of 
+      an extractor module requires that it finds URLs close to the visits given 
+      in the input document (thus performing the first step in the DoorStep 
+      processing chain). The \textit{extractor's} output is expected to be a 
+      document describing those URLs. The contract of a \textit{refiner} module 
+      requires that it acts either as a \textit{relation finder} or a 
+      \textit{rating function}. If the \textit{refiner} acts as a rating 
+      function it is expected to assign a rating value to each of the URLs on 
+      the input. If an URL already has a rating, it shall be modified according 
+      to the \textit{refiner's} internal weight. A \textit{refiner} acting as a 
+      \textit{relation} finder is expected to read the URLs from the input 
+      document and find other places related to them (by a relation that is 
+      configured within the \textit{refiner} module).
       
-      For the test application a small CGI script would provide the last 200
-      lines of the servers' log file in the XML format, more sophisticated
-      approaches could also use databases or plug into the server's logging API.
-      The trials of the system, on the other hand, were performed using a large
-      static file as an input in order to have get comparable results for
-      different runs with different configurations.
-    \subsection*{Display}
-      The related places are displayed on a dedicated display in the user's
-      enviroment, showing one HTML page at a time. The system will cycle through
-      the related places with a low frequency (one minute or more), with the
-      interesting pages being shown more frequently. This kind of setup is not
-      intrusive or disturbing \cite{webaware}, yet still allows the user to 
-      check the status of his \textit{territory} at any time.
+      A \textit{refiner} acting as a \textit{relation finder} can be configured 
+      with a maximum degree of relationship. If a URL is encountered with a 
+      higher degree of relationship the refiner shall \textbf{not} attempt to 
+      find URLs that are related to it -- the URL must be passed on to the 
+      output unmodified. This property allows to mimick the flexible setup as in 
+      figure \ref{relations} while the \textit{relation finders} are only 
+      connected in a simple daisy-chain. (\textit{Refiners} acting as rating 
+      functions must ignore the degrees of relationship). It is also required 
+      that rating functions must be on the end of the chain.
       
-      If a particular page catches the user's interest he may explore that place
-      further by following the hyper links. The cycling will stop during that
-      time but will automatically commence after a while.
+      Each module in the system can contain one or more filters. A filter may 
+      remove any entity (visit or URL) from the input \textit{before} any 
+      processing is done. The entity will permanently be removed from all 
+      processing.
+    \subsection{Testbed implementation}
+      For practical reasons we created a framework of Java classes that 
+      implements the basic functionality of the \textit{extractors} and 
+      \textit{refiners}, is capable of handling the connections between the 
+      modules and takes care of recurring tasks (e.g. XML decoding or search 
+      engine requests). Due to the framework a new module type can (in many 
+      cases) be implemented by overwriting but a single method of the 
+      framework's superclass.
       
-      The display system comes in two different flavours: A Java-driven web
-      application that requires only a standard web browser on the front end
-      machine and a small VisualBasic application with it's own User interface.
-      
-      For the user study, the display will run on a touch screen system which
-      should facilitate casual interaction.
-  \section*{Results}
-    \subsection*{Test Data}
-      The test dataset was part of the HTTP log file from a research lab
+      Nevertheless it is not required that each module is part of the 
+      framework or even written in Java at all. As long as a module is able to 
+      understand the respective XML format(s) and conforms to the contracts 
+      given in the previous section it should be able to interact with all 
+      other modules.
+    \subsection{Test Data}
+      The test dataset is part of the HTTP log file from a research lab
       web server. The log file contains about 200.000 entries from a period of
-      about 2 weeks. Preliminary analysis indicated that the 
-      \lq\lq noise ration\rq\rq\ was quite high, about 80\% of the log entries
-      were the result of queries that either failed or retrieved a second
-      document for the same visitor (e.g. pictures or pages referred to by local
-      resources). Since we do not wish to track the visitor's behaviour while
-      on the page (but rather wish to identify the \textit{territory} the
-      visitor is coming from), this entries are of little interest for us.
+      about 2 weeks.
+      
+      The file contains a high amount of redundancy and noise: The 200.000 
+      entries record visits from only 5720 different clients. Of those, 1603 
+      were either visits from local clients (within the same network as the 
+      server), failed to retrieve a resource or were requests for pictures 
+      within sites.
       
       Most of the remaining entries (82\%) came from a machines with a proper
       DNS host name, and only 18\% from unresolveable addresses -- this indicates
@@ -431,26 +434,10 @@
       crawlers) that idendentifiable by an \verb$User-Agent$ String and 8\% of
       were referred to the site as the result of a web search (with the search
       string showing up in the \verb$Referer$ field).
-    \subsection*{Finding a starting point}
-      To find the starting URL, both an extractor directly 
-      mapping a visit to the
-      client's host name and an extractor looking for \textit{alive} URLs were
-      implemented. 
+    \subsection{Results}
       
-      The latter first tries if the client's own 
-      address is \textit{alive}
-      and then checks each of the host names sub domains, prefixed with 
-      \lq\lq www\rq\rq . (e.g. for a visit from \verb$dyn293.users.provider.com$
-      it would check the address itself, \verb$www.users.provider.com$ and 
-      \verb$www.provider.com$). The extractor will return all \textit{alive}
-      host names found in that manner, to increase the chance of having
-      a suitable starting point.
       
-      During a run with the test log file, the extractor would encounter 5720
-      unique client addresses (out of 200.000 lines) and find about 2000
-      hosts alive. This is not as good as the 95\% found in \cite{webaware}, but
-      still a good enough set of starting points.
-  \section*{Conclusions}
+  \section{Conclusions}
   
   \begin{thebibliography}{99}
     \bibitem{webaware} Hans-W. Gellersen and Albrecht Schmidt.
