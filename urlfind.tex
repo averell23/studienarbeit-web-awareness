@@ -29,7 +29,7 @@
     server's log file. Whenever we want to distinguish between the
     actual event of a visit taking place and the set of data
     describing this event we will call the former a \textit{visit event}
-   
+    
     \textbf{Relations between visits and URLs.} A simple example
     for a relationship between a visit and an URL could be
     \lq\lq The URL is in the same domain the visit came from\rq\rq .
@@ -43,6 +43,7 @@
     simply make requests like \lq Find out what this visitor was 
     interested in and give me a list of people who share this
     interest\rq .} 
+    
   \section*{System overview}
     // FIXME: System figure
   \section*{Step one: Find the starting point}
@@ -172,6 +173,9 @@
 	       URLs that \textit{may} be related with
 	       a resonable effort.}
        \end{itemize}
+       \textbf{It is important} to note that the URL is \textbf{not}
+       the only input to the relation-finding process. Other information
+       (e.g. the REFERER field for a specific visitor) may also be used.
   \section*{Step three: Finding URLs of interest}
     In the previous step were looking for a (probably rather large)
     set of URLs which are all somehow related to the original visit.

@@ -1,63 +1,80 @@
 \documentclass[a4paper]{danarticle}
 \usepackage{a4}
-\pagestyle{empty}
+\usepackage[dvips]{color}
+\usepackage[dvips]{graphicx}
+\pagestyle{headings}
 \sloppy
 
 \begin{document}
-  \section*{The Test Platform (Gilbert)}
-    \subsection*{Description}
-      To test different methods of URL extraction, I developed an extensible
-      framework that would allow the easy addition and removal of processing
-      steps. Most of the actual implementation was done in Java, but since
-      all cummunication is done through XML, modules can be written in any
-      programming language.
-    \subsection*{Processing Steps}
-      FIXME: Enter processing diagram here \\
-      \begin{enumerate}
-        \item{The original log file data is converted into the LOG\_XML format.}
-        \item{The \textbf{extraction} converts the LOG\_XML data into an url list
-	      in the URL\_XML format.}
-        \item{After the extraction, there may be a chain of \textbf{refiners}. 
-	      Each refiner may modify the URL\_XML list in any way. Since the 
-	      refiners are in a chain, the output of one refiner will be the 
-	      input for the next one.}
-        \item{The \textbf{presentation} is not defined by the framework. It will
-	      usually consist of compiling the URL\_XML output of the last
-	      refiner into a suitable display format.}
-      \end{enumerate}
-      In addition to this the Java implementation allows each extractor and
-      refiner to contain \textbf{filters}. Filters are meant to discard 
-      unwanted elements from the input before processing takes place.
-      FIXME: ADD filter diagram.\\
-      FIXME: ADD LOG\_XML example\\
-      FIXME: ADD URL\_XML example\\
-    \subsection*{Extractor Designs}
-      \subsubsection*{Straight Extraction}
-        This extraction method works on visits originating from IP addresses. 
-	The extractor will try to resolve the address into a valid DNS hostname
-	and, if successful, perform the following steps:
-	\begin{enumerate}
-	  \item{Try if the hostname is alive.}
-	  \item{Iterate through all subdomains contained in the hostname, and
-	        try if the address www.\{subdomain\} is alive.}
-          \item{If an address is found to be alive, the url is written to the
-	        output.}
-	\end{enumerate}
-	(In this context an address is said to be \textit{alive} if there is a
-	service on the standard http port that responds to GET or HEAD requests.
-	FIXME: ADD Example \\
-    \subsection*{Refiner Designs}
-      \subsubsection*{Search Engine Refinement}
-        This refiner will use a standard web search engine (such as AltaVista
-	or Google) to find more urls. The extractor uses a predefined set
-	of keywords which are deemed to be interesting for the user.
-	The extractor will take an url from the input and will search this
-	url's domain for the given keywords. The results of this
-	search are then written to the output.
-      \subsubsection*{Meta Refinement}
-        This refiner enriches the existing url information to faciliate the
-	comparison and ranking of the results. The refiner will try to establish
-	a http connection to a url and if successful will read the 
-	<title> and some <meta> tags (like keywords) from the response. This
-	information will then be written to the output. 
+  \author{Daniel Hahn}
+  \title{Visitor-Awareness Testbed (Gilbert)}
+  \maketitle
+  
+  \section*{Introduction}
+    Gilbert is a implementation of a Visitor-Related URL finding system. It
+    consists of an XML data exchange format and Java classes containg the
+    actual implementation.
+    
+    To understand what this software does one should refer to the
+    description of the Visitor-Related URL finding systems - this
+    document will refer to concepts introduced there.
+  \section*{Components of Gilbert}
+    Gilbert consists of two main components: \textit{Extractors} and 
+    \textit{Refiners}.
+    \\
+    An \textit{Extractor} will typically take a list of visits and produce
+    a list of URLs as an output. These URLs will then be starting points in
+    the search for relations. An \textit{Extractor} is expected to perform
+    the first step in the relation finding process: To find a URL close to
+    a visit's origin. A well-behaved extractor should therefore return
+    one URL for each visit on the input\footnote{This property is not enforced
+    by the class, and is might be relaxed if neccessary: Duplicate URLs on
+    the output, for example, can be eliminated.}.
+    \\
+    A \textit{Refiner} will typically take a list of URLs as an input and
+    produce a list URLs as the output. It is expected that the output contains
+    the URLs from the input and (optionally)
+    any number of URLs related to them in the
+    $ 1^{st} $ degree\footnote{This property isn't enforced either, and it
+    may be relaxed to emulate filtering (so that URL that would have been
+    dropped by a filter can be dropped in the \textit{Refiner} itself.}.
+    The output of one \textit{Refiner} may be fed into another \textit{Refiner},
+    creating a daisy-chain like structure. 
+    //FIXME: Diagram needed
+    
+    A \textit{Refiner} may either search for URLs that are related to the
+    input URLs, or may apply a \textit{interest function} to the Input URLs,
+    thus performing the second and third step of the URL-finding process.
+  \section*{Data flow/Degrees of Relationship}
+    Since the \textit{Refiners} are configured in a daisy-chain configuration
+    (as opposed to the more flexible configuration proposed for the theoretical
+    system) a mechanism is needed to deal with different degrees of
+    relationship: Each URL will carry a <degree> tag, indicating which degree
+    of relationship the URL has to the starting URL. The \textit{Refiner}
+    may opt to disregard all URLs which's <degree> is higher than a 
+    predefined value\footnote{These URLs should still be passed through to
+    the output, however.}. The degree of all new URLs in the output should be
+    increased by one (depending on the degree of the URL which they are related
+    to).
+  \section*{Filtering}
+    \textit{Extractors} and \textit{Refiners} may have \textit{prefilters}. 
+    Filters registered with them will eiter \textit{accept} input objects, or
+    not. Objects which are not accepted will never reach the \textit{Extractor}
+    (or \textit{Refiner}) and will be lost for all further processing. Filters
+    are generic, they can be used with all types of \textit{Extractors}  
+    (or \textit{Refiners}, depending on the type of the filter).
+    
+  \section*{The Utility class}
+    The utility class \textbf{gilbert.Util} contains methods for different
+    recurring operations. It is recommended that the status of URLs is checked
+    through the methods provided in this class, since they will be cached
+    to speed up further processing.
+    
+  \section*{References for programmers}
+    This document is only meant as a brief introduction, not as an up-to date
+    documentation for programmers. The API documentation for the Gilbert classes 
+    can be created with \textbf{javadoc}, it is also planned to provide 
+    XML schemas as a reference for the XML data exchange 
+    formats\footnote{It is recommended to run gilbert without document
+    validation to speed up the processing.}.
 \end{document}

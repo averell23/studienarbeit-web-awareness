@@ -1,0 +1,174 @@
+\documentclass[a4paper]{danarticle}
+\usepackage{a4}
+\usepackage[dvips]{color}
+\usepackage[dvips]{graphicx}
+\pagestyle{headings}
+\sloppy
+
+\begin{document}
+  \author{Daniel Hahn}
+  \title{Designs for Visitor-Related URL finding}
+  \maketitle
+  
+  \section*{Introduction}
+    This document approaches to finding visitor-related URLs\footnote{Please
+    refer to the description of visitor-related URL finding systems for 
+    more information}. The two sections deal with the topics of
+    finding \textit{starting URLs} and \textit{related URLs} respectively.
+    
+    Some of these systems have been tested, some have not.
+    \section*{Finding Start URLs}
+      \subsection*{Finding Live Starting URLs by Domain}
+      \textbf{Description:} Try to find a start URL which is
+      alive by looking at the client's\footnote{The client is the
+      \textit{visit's origin} in this case.} domain name string.
+      \\
+      \textbf{Definition of close:} This approach does only work on
+      fully qualified DNS name strings. A host will be closer to
+      one in the same subdomain that to one in a different subdomain,
+      and so on\footnote{This is the definition of close from the
+      original document}.
+      \\
+      \textbf{Procedure:} The algorithm will first test if the client
+      address itself is \textit{alive}. Then it will try if the
+      clients subdomain, prefixed with \lq www\rq\ is alive. After
+      that, it will try the parent domain (prefixed with \lq www\rq ), and
+      so on\footnote{So, for the client \textbf{hoogla.boogla.banana.net}
+      it would try the client itself and then \textbf{www.boogla.banana.net}
+      and \textbf{www.banana.net}. (We assume that \textbf{www.net} can be
+      safely ignored.)}. After an \textit{alive} domain is found, the
+      algorithm will terminate and return that URL\footnote{A variant
+      of the algorithm can also continue and return \textit{all} URLs that
+      are found, although this would not strictly meet the specifications.}.
+      When no \textit{alive} URL is found, the algorithm will terminate
+      without result.
+      \\
+      \textbf{Status:} This approach has been implemented in the first
+      versions of the system. 
+      \\
+      \textbf{Comments:} The assumption of this approach is that almost
+      all client addresses can be resolved into a qualified DNS hostname, 
+      and that most domains contain a machine called \textbf{www} running
+      a http server. It would be easy to handle procedures for finding alive
+      IP addresses (for clients that have no DNS name), but this would 
+      probably not be very effective.
+      
+      This approach has the benefit of making sure that the start URL is 
+      always \textit{alive}, but imposes a considerable overhead since
+      URLs have to be checked for being \textit{alive}. It can be used for
+      scenarious where the next processing steps require the starting URL
+      to be \textit{alive}
+      \subsection*{Using the client URL as a start URL}
+      \textbf{Description:} The URL of the client is always used as the starting
+      URL. No definition of \textit{close is needed}
+      \\
+      \textbf{Status:} This approach should be trivial to implement, but
+      has not yet been tested in a live system.
+      \\
+      \textbf{Procedure:} Use the client's address as the starting URL.
+      \\
+      \textbf{Comments:} This approach is easy to implement and imposes minimal
+      overhead. However, the starting URLs are most likely \textit{not alive},
+      and this may be undesirable for some applications.
+    \section*{Finding Related URLs}
+      \subsection*{URLs related by domain and keywords (Search engine)}
+      \textbf{Description:} The related URLs are found through a keyword search
+      in an publicly available internet search engine.
+      \\
+      \textbf{Relation:} The URLs are in the same (sub-)domain as the
+      original URL and are found by a search engine when searching for 
+      certain keywords.
+      \\
+      \textbf{Procedure:} A search engine is used to look for a set
+      of keywords (or even a more complex query). If possible, the search
+      is restricted to the subdomain the original URL is in. If this is not
+      possible, all URLs \textit{not} from this subdomain will be discarded.
+      The result of the search\footnote{Excluding those URLs that have been 
+      discarded} contains URLs related to the original URL.
+      \\
+      \textbf{Status:} This procedure has been implemented in early
+      versions of the system.
+      \\
+      \textbf{Comments:} Search engines are very powerful tools and making use
+      of them will in many cases eliminate the need for an own, complex
+      search and indexing algorithm. The challenge with this method however
+      is finding the right keywords to search for. 
+      
+      It is possible to use predefined \textit{static} keywords, but it may
+      also be feasible to dynamically determine the keywords during runtime.
+      \\
+      \textbf{The original URL does \textit{not} need to be alive.}
+    \subsection*{URLs related by language and keywords (search engine)}
+      \textbf{Description:} Similiar to the previous approach, except that 
+      the original URL's language is used as a restriction for the serch
+      instead of the subdomain.
+      \\
+      \textbf{Relation:} The URLs are related by serving documents
+      in the same language than the original URL and being found by
+      a web search with the same keywords.
+      \\
+      \textbf{Status:} This approach has not yeat been implemented.
+      \\
+      \textbf{Comments:} Everything said about the previous approach 
+      applies for this one, too.
+    \subsection*{Other combinations with search engines}
+      Apart from the two approaches mentioned above, search engines could
+      also be used to find other kinds of relations, e.g. URLs served
+      by the same organization, URLs in the same geographical area, etc.
+      
+      These approaches will most likely take some experimantation to
+      implement.
+    \subsection*{URLs related by links}
+      \textbf{Description:} Find all URLs linked to from the original URL.
+      \\
+      \textbf{Relation:} All URLs are linked to from the document served at
+      the original URL.
+      \\
+      \textbf{Status:} This approach has not yet been implemented.
+      \\
+      \textbf{Procedure:} Retrieve the document served by the original
+      URL and parse for hyperlinks. All URLs contained in those hyperlinks
+      are related to the original URL\footnote{Relative links may or may
+      not be included.}.
+      \\
+      \textbf{Comments:} This procudure should be reasonably easy to implement.
+      \\
+      \textbf{The original URL needs to be alive}
+    \subsection*{URLs related by Referral}
+      \textbf{Description:} Find URLs that referred to the original URL.
+      \\
+      \textbf{Relation:} The URLs have referred to the original URL.
+      \\
+      \textbf{Status:} This method has not yet been implemented.
+      \\
+      \textbf{Procedure:} Return the URL that has reffered the original
+      client to our site. 
+      \\
+      \textbf{Comments:} This approach may not be very successful on it's own,
+      because most referals come from a limited set of pages that link to our
+      page, or from search engines. When this set of pages is learned, not much 
+      information is gained by looking at the referer. 
+      \\
+      \textbf{The original URL does not need to be alive}
+    \subsection*{URLs related by referred search query}
+      \textbf{Description:} Find URLs that are found by the same search 
+      query that the client used to find our URL.
+      \\
+      \textbf{Relation:} The URLs are the result of a search query that brought
+      the original visitor to our URL. 
+      \\
+      \textbf{Status:} This approach has not yet been implemented.
+      \\
+      \textbf{Procedure:} If the original URL was referred to our site
+      by a search engine, the REFERER string will contain the complete
+      search query. Use this query in the appropriate search engine to find
+      related URLs.
+      \\
+      \textbf{Comments:} The relationship ist \lq outside \rq\ the original
+      URL, since stricly speaking the REFERER information is not a property
+      of the URL but of the original visit. Therefore it is at least
+      questionable if this approach can be used to find relations of degree 2 or
+      higher.
+      \textbf{The original URL does not need to be alive, but needs to have
+      a referral information connected to it.}
+\end{document}
