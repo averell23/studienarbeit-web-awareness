@@ -40,10 +40,10 @@
     
     Although
     information about the \textit{visits} is readily available in the
-    form of web server logs, the usual tools for displaying it (e.g. AWStats 
-    FIXME:CITE) will only
+    form of web server logs, the usual tools for displaying it (e.g. 
+    AWStats\cite{awstats}) will only
     provide statistical information but do not explore the rich context in which
-    the visits took place. (FIXME:MIT VISIT FLOW PAPER)
+    the visits took place. 
     
     Initial research into the subject by Gellersen and Schmidt\cite{webaware}
     yielded the
@@ -60,17 +60,19 @@
     the host's place.
     
     The notion of \emph{relations} between web places is not an entirely new 
-    one: In one noteable paper FIXME and FIXME FIXME:CITE they researched the 
-    relations that are formed by hyperlinks between pages. They not only found 
+    one: Relations by hyperlinks and web communities have already 
+    been the subect of research by Flake\cite{flake}, Gibson\cite{gibson}, 
+    Larson\cite{larson} and others. 
+    Adamic and Adar\cite{links}, for example, not only found 
     evidence that a hyperlink indicates a social relation, but also that 
     clusters of hyperlinked pages indicate social groups that can be identified 
     with relative ease. These findings are important for the current work, 
-    since they prove the way of exploring relations is a viable one. FIXME and 
-    FIMXME's main interest was, however, in showing that meaningful relations 
-    between pages exists at all and to identify groups of related pages. They 
-    did not suggest that their findings should be used for any particalar 
-    applications or propose how they should be presented to an end user. The 
-    DoorStep system, on the other hand, is based on the assumption that 
+    since they prove the way of exploring relations is a viable one. The main
+    interest of this work, however, was to show that meaningful relations 
+    between pages exists and to identify groups of related pages. The
+    researchers do not suggest in which particular way their findings should be 
+    applied or presented to the end user. 
+    The DoorStep system, on the other hand, is based on the assumption that 
     meaningful relations between web places do exist but does not concern itself 
     with the exact nature of those relations -- in fact, the system is designed 
     to work with almost all imaginable kinds of relations. What we propose is an 
@@ -80,7 +82,7 @@
     
     Again, the DoorStep system itself does not concern itself with the exact 
     nature of the end user display. And while we propose the use of an ambient 
-    display (similiar to that intruduced in FIXME), the system allows for many 
+    display (like proposed in \cite{ambient}), the system allows for many 
     different ways of displaying the results.
     
     We will introduce a system for finding places that are \textit{related} to
@@ -155,7 +157,13 @@
       place with it's neighbours and thus explores the virtual surroundings of 
       the starting point. 
       
-      The relation finding step regards the whole network as a huge graph, of
+      \begin{figure}[ht]
+        \centering
+        \includegraphics[width=10cm]{webgraph}
+        \caption{The web as a graph}
+        \label{webgraph}
+      \end{figure}
+      The relation finding step treats the whole network as a huge graph, of
       which the web places (and other machines) are the vertices. A relation
       between two web places can then be thought of as an edge of the graph,
       connecting those places. Relations can either be directed, like
@@ -240,8 +248,8 @@
        \textit{alive} it may be used as a starting point. If that is not the
        case, the algorithm fails.
        \begin{figure}[ht]
-         {\ttfamily
-         \begin{tabbing}
+       {\ttfamily
+       \begin{tabbing}
            \hspace{5mm} \= \hspace{5mm} \= \hspace{5mm} \= \hspace{5mm} \= \\
 	   @subdom\_parts = \textit{split}(\verb$/\./$, visit\_source); \\
 	   \\
@@ -361,6 +369,12 @@
        useful during processing the relation finders will mark all URLs with the 
        degree of relationship they have towards the original starting place.
      \subsection{Search Engines and Relation Finding}
+       \begin{figure}[ht]
+         \centering
+         \includegraphics[width=10cm]{googleadv}
+         \caption{Google Search Engine}
+         \label{googleadv}
+       \end{figure}
        Commercial web search engines like \cite{google} or \cite{altavista} have 
        some properties that make them well-suited for finding related URLs: They 
        use sophisticated web crawling and indexing techniques to build a 
@@ -385,9 +399,31 @@
        box\rq\rq design) is that they are, well, commercial. Usually theses 
        engines may only be used freely for personal, interactive requests. An 
        example for these conditions are Google's terms of use\cite{googletou}:
-       
-       FIXME: Cite TOU
-       
+       \begin{center}
+       \begin{minipage}{10cm}
+       \itshape
+       [...] You may not take the
+       results from a Google search and reformat and display them, or mirror
+       the Google home page or results pages on your Web site. You may not
+       "meta-search" Google. If you want to make commercial use of the Google
+       Search Services, 
+       [...]
+       You may not send automated queries of any sort to Google's system
+       without express permission in advance from Google. Note that 
+       \lq\lq sending
+       automated queries\rq\rq\ includes, among other things:
+       \begin{itemize}
+       \item{using any software which sends queries to Google to determine how
+             a website or webpage \lq\lq ranks\rq\rq\ on Google for various 
+             queries;}
+       \item{\lq\lq meta-searching\rq\rq\ Google; and}
+       \item{performing \lq\lq offline\rq\rq\ searches on Google.}
+       \end{itemize}
+       Please do not write to Google to request permission to 
+       \lq\lq meta-search\rq\rq\
+       Google for a research project, as such requests will not be granted.
+       \end{minipage}
+       \end{center}
        This means that publicly available DoorStep system will have to license 
        the use of the search engine or find a free one if it does not want to 
        build it's own web index (which is very demanding).
@@ -440,16 +476,17 @@
     comprehensive examples of relations between web places and explore their 
     possible meaning. We expected that most of the relations used in the 
     DoorStep system will be taken from independent research and that the quality 
-    of such relations will be extensively analyzed in papers like FIXME:Cite.
+    of such relations will be extensively analyzed in papers like \cite{links}.
     \\
     
     \textbf{Relation by hyperlinks:} These are probably the best understood and 
     most researched of all relations. Hyperlinks have several properties that 
     make them interesting to use in the DoorStep system: Hyperlinks are usually 
     set by people (rather than machines) and therefore denote social rather than 
-    technical relations between web places. FIXME and FIXME showed that 
+    technical relations between web places. Adamic and Adar showed that 
     social groups can be identified by analyzing groups of hyperlinked web 
-    pages. Hyperlinks are also very easily handle; no additional information is 
+    pages\cite{links}. Hyperlinks are also very easily handle; no additional 
+    information is 
     needed to follow a hyperlink to another web page and thus the respective 
     relation finder does not need a complicated heuristic.
     \\
@@ -495,7 +532,8 @@
     easily exploit them -- simply by querying the search engine.
     \\
     
-    \textbf{Relation by similiar hostname:} Some researchers (like FIXME:CITE) 
+    \textbf{Relation by similiar hostname:} Some researchers (like 
+    \cite[Link Affiliation]{experts}) 
     treat web places with similiar host names as related. For example they 
     assume that hostnames with the same prefix (like \verb$www.apple.com$ and
     \verb$www.apple.co.uk$) belong to the same organization. A heuristic for 
@@ -509,10 +547,14 @@
     more sophisticated algorithms could also select new keywords from the web 
     places that have already been found.
   \section{Examples of rating functions}
-    There is a lot of research on rating functions, and a lot of different 
-    approaches have been published (FIXME:CITE). Although rating functions from 
+    There is a lot of research on rating functions, and many different 
+    approaches have been published, like PageRank\cite{page}, 
+    Topic Destillation\cite{kleinberg} or
+    anchor-text analysis\cite{chakrabarti}. 
+    Although rating functions from 
     the literature may perform well, they are usually also quite complex and 
-    require a lot of processing. Many, like the popular Link Rating (FIXME:CITE) 
+    require a lot of processing. Many, like the popular Link 
+    Rating\cite{page}\cite{kleinberg}
     even require a more or less complete web index, something that is difficult 
     to build and maintain outside a lab enviroment. For this reason we will not 
     discuss those functions here, and instead present some simpler, home-grown 
@@ -549,7 +591,7 @@
     keyword but raise the rating more slowly if a huge number of occurences is 
     involved:
     \[
-      FIXME
+      - \frac{1}{log((n - \alpha) \beta) + 1}
     \]
     It showed that for most pages this method worked well, and with well-chosen 
     keywords and could distiguish pages that only dealt with the topic 
@@ -570,7 +612,7 @@
     the result of the search query. A rating function can exploit this property 
     and assign a higher rating to pages that show up at the top of the search 
     results than to those on the bottom.
-  \section{System Performance Analysis}
+  \section{Test Implementation}
     \subsection{Testbed Architecture}
       In order to evaluate our assumptions, we implemented a testbed that 
       allowed us to test the DoorStep system in a real-life enviroment, using 
@@ -647,11 +689,13 @@
       functions must ignore the degrees of relationship). It is also required 
       that rating functions must be on the end of the chain.
       
+      FIXME:GRAPHIC
+      
       Each module in the system can contain one or more filters. A filter may 
       remove any entity (visit or URL) from the input \textit{before} any 
       processing is done. The entity will permanently be removed from all 
       processing.
-    \subsection{Testbed implementation}
+    \subsection{Test Framework}
       For practical reasons we created a framework of Java classes that 
       implements the basic functionality of the \textit{extractors} and 
       \textit{refiners}, is capable of handling the connections between the 
@@ -692,6 +736,60 @@
       display should be unobtrusive to the user while at the same time enabling 
       him to check his web surroundings whenever he chooses to.
       (FIXME:Screenshots,Picture)
+    \subsection{Walk-Trough Scenario}
+      In this small scenario we will follow the way that three visit events take 
+      through the system. We will see how the visits are handled and how related 
+      web places are found. Our example system will be set up in the following 
+      way (line numbers given for reference only):
+      \begin{verbatim}
+010 extractor = new ExtractingChain(dataSource);
+020 String keywords = "wearable,ubicomp";
+030  
+040 Extractor ext = new StraightExtractor();
+050 ext.addPrefilter(new LocalVisitFilter());
+060 ext.addPrefilter(new AgentVisitFilter());
+070 extractor.setExtractor(ext);
+080        
+090 SearchingRefiner search = new SearchingRefiner();
+100 search.setKeywords(keywords);
+110 extractor.addRefiner(search);
+120        
+130 extractor.addRefiner(new LinkRefiner());
+140                
+150 KWInterestRefiner kwr = new KWInterestRefiner(); 
+160 kwr.setKeywords(keywords); 
+170 extractor.addRefiner(mkr); 
+        \end{verbatim} 
+        The \verb$ExtractingChain$ in line 10 is an utility object that will 
+        connect the Extractor and several refiners. The \verb$StraightExtractor$ 
+        in line 40 implements the algorithm introduced in section FIXME:REF, and 
+        it's prefilters (lines 50 and 60) will discard visits that come from the 
+        local network, or any automated web agent.
+        
+        The \verb$SearchingRefiner$ in line 90 will search for URLs in the same 
+        domain as the starting point and the \verb$LinkRefiner$ (line 130) will 
+        follow hyperlinks.
+        
+        Finally, the \verb$KWInterestRefiner$ in Line 150 will use the rating 
+        function introduced in FIXME:REF to rate the URLs.
+  \section{Test System Performance} 
+    Although a formal user study has yet to be planned, we did 
+    preliminary tests on the system in two ways: First we installed the JSP 
+    server on a machine available to the research group, and fed it with the 
+    log data from our own web server (at 
+    \textit{http://ubicomp.lancs.ac.uk/). This allowed us not only to test 
+    the long-term stability of the software, but also to observe if and how 
+    the system would be used. In many cases we were quite surprised about 
+    the web places found by the system, and most of them were related to our 
+    research. The main problem with the test setup was that the traffic on 
+    our own machine is quite low, allowing the system to find new places 
+    only very infrequently. Researchers that did not have their own display 
+    for the DoorStep system did not use it permanently, but rather looked 
+    the page up during their spare time.
+    
+    For the second test we performed some offline processing on a large log 
+    file, in order to get some statistical results. This test will be explained 
+    in detail in the next sections.
     \subsection{Test Data}
       The test dataset is part of the HTTP log file from a research lab
       web server. The log file contains about 200.000 entries from a period of
@@ -808,7 +906,7 @@
     a system that can help to visualize the connections between a site and the 
     visitors. The system should renew the hosts' interest in maintaing his own 
     web place and, by allowing a look into the virtual surroundings, give new 
-    incentives for improvements. A test installation has been well recieved 
+    incentives for improvements. The test installation has been well recieved 
     within the group, and the results were interesting and suprising. On one 
     occation a researcher even messaged us if we could \lq\lq wind back\rq\rq\ 
     the slide show to an interesting page that he saw -- this feature will be 
@@ -834,9 +932,39 @@
     to use information from existing profiling systems (FIXME:REFER TO SUCH) or
     information from user accounts.
   \begin{thebibliography}{99}
+    \bibitem{awstats} AWStats Tool
     \bibitem{webaware} Hans-W. Gellersen and Albrecht Schmidt.
     Look who's visiting: supporting visitor awareness in the web.
     Academic Press, 2000.
+    \bibitem{experts} Krishna Bharat and George A. Mihaila.
+     When Experts Agree: Using Non-Affiliated Experts to Rank Popular Topics,
+     Proceedings of the WWW10 Conference, 2001.
+     http://www10.org
+    \bibitem{flake} C. Flake, S. Lawrence and C. Lee Giles.
+    Efficient identification of web communities.
+    Sixth ACM SIGKDD Internation Conferenc on Knowledge Discovery and Data 
+    Mining, Boston, MA, 2000. 
+    pp. 150-160
+    \bibitem{gibson} D. Gibson, J. Kleinberg and P. Raghavan.
+    Inferring Web communities from link topology.
+    Proceedings of the 9th ACM Conference on Hypertext and Hypermedia, 1998.
+    \bibitem{links} Lada A. Adamic and Eytan Adar.
+    Your are what you link, Proceedings of the WWW10 Conference, 2001.
+    http://www10.org/program/yawyl/YouAreWhatYouLink.html
+    \bibitem{page} S. Brin and L. Page.
+    The anatomy of a large-scale hypertextual web search engine, 
+    Proceedings of the WWW10 Conference, 2001.
+    http://www10.org
+    \bibitem{kleinberg} J. Kleinberg.
+    Authoritative sources in a hyperlinked enviroment, Proceedings of the WWW10
+    Conference, 2001.
+    http://www10.org/
+    \bibitem{chakrabarti} S. Chakrabarti, B. Dom et. al.
+    Experiments in topic distillation.
+    Proceedings of ACM SIGIR Workshop on Hypertext Information Retrieval on
+    the Web, 1998.
+    \bibitem{ambient} Hans-W. Gellersen, Albrecht Schmidt and Michael Beigl.
+    Ambient Media for Peripherial Information Display.
     \bibitem{windows} Liechti O, Siefer N and Ichikawa T.
     A non-obtrusive User Interface for Increasing Social Awareness on the 
     World Wide Web. Personale Technologies 3 (1\&2), 1999.
@@ -846,7 +974,5 @@
     \bibitem{googletou} Google: Terms of Use
     \bibitem{http} HTTP RFC
     \bibitem{dns} RFC 1035. Domain Names - Implementation and Specification
-    \bibitem{bigBro} Apache Web Server wins Big Brother Award 2000 in Germany.
-    http://www.big-brother-award.de/en/2000/
   \end{thebibliography}
 \end{document}
