@@ -13,8 +13,9 @@
   \section*{Introduction}
     This document approaches to finding visitor-related URLs\footnote{Please
     refer to the description of visitor-related URL finding systems for 
-    more information}. The two sections deal with the topics of
-    finding \textit{starting URLs} and \textit{related URLs} respectively.
+    more information}. The sections deal with the topics of
+    finding \textit{starting URLs}, \textit{URL relationships}, \textit{applying
+    interest functions} and \textit{filtering}, respectively.
     
     Some of these systems have been tested, some have not.
     \section*{Finding Start URLs}
@@ -171,4 +172,107 @@
       higher.
       \textbf{The original URL does not need to be alive, but needs to have
       a referral information connected to it.}
+  \section*{Interest functions}
+     \subsection*{Keyword match to META-tags}
+       \textbf{Description:} Keywords are matched to documents <meta> tags.
+       \\
+       \textbf{Status:} This function has not yet been implemented.
+       \\
+       \textbf{Procedure:} For this method to work the document served by
+       the URL needs to contain tags of the form 
+       \verb!<meta name="keywords" content="keyword1,keyword2,..." />!
+       
+       The function assumes that are $ n $ given keywords to measure the
+       user interest against. For each keyword $ k $ that is in the 
+       page's keyword list $ KL $ the interest will be increased by 
+       $ 1/n $. Thus the interest $ \iota $ of a URL calculates to:
+       \[
+       	  \iota = \sum_{k_i \in KL} \frac{1}{n}
+       \]
+       \\
+       \textbf{Comments:} Instead of using the \verb!keyword! meta-tags this
+       function may also use other kinds of meta-tags usually provided in HTML
+       documents. The main drawback is that it will fail whenever the meta-tags
+       are not present (in which cas it should simply be ignored).
+       
+       A variant may work with weighted keywords.
+     \subsection*{Keyword match to document body}
+       \textbf{Description:} Keywords are matched against words found in
+       the document's body. 
+       \\
+       \textbf{Status:} This method has not yet been implemented.
+       \\
+       \textbf{Procedure:} This method should work like the search for
+       \verb!meta! keywords. However, it should also take the number of
+       occurences of the keywords into account. To do so, one may use some
+       kind of logarithmical scale.
+       
+       I'd propose a general weight function of the form:
+       \[
+         \iota = \sum_{k_i \in KL} w(n(k_i))/n
+       \]
+       Where $ n(k_i) $ is the number of occurence for a given keyword and
+       $ w(n(k_i)) $ is a weight function for a single keyword, for which one
+       could use a function like the following\footnote{This formula has been
+       chosen rather arbirarily and may or may not work for the given purpose.}:
+       \[
+         w_1(x) = - \frac{1}{\log((x + \alpha) * \beta)} +1
+       \]
+       $ \alpha $ and $ \beta $ are parameters, where $ \alpha $
+       can be thought of as the \lq threshhold\rq\ , (the \lq starting point\rq\
+       of the curve, while $ \beta $ may \lq spread out\rq\ or \lq compress\rq\ 
+       the curve). The parameters are interdependent and may be played with,
+       for a start one could suggest $ \alpha = 2 $ and $ \beta = 1 $. To
+       disallow the unwanted \lq first part\rq\ of the curve (where 
+       $ (x+ \alpha) * \beta \leq 1 $. Thus, the formula should be amended to:
+       \[
+         w(x) = \left \{ 
+	 \stackrel{0 | (x + \alpha) * \beta \leq 1}{w_1(x) | otherwise}
+	 \right.
+       \]
+       \\
+       \textbf{Comments:} This function may be used together or instead of the
+       previous one. If used together, seems like a good idea to give the
+       previous method greater weight. 
+       
+       The function used is quite an \textit{ad hoc} approach, it may be
+       neccessary to use a completely different function (or even a table with
+       discrete weights for each wordcount). A variant may also work with
+       weighed keywords.
+     \subsection*{Note on keywords}
+       The previous methods did not determine where the keywords actually come
+       from. While the first approach would be to use a fixed set of predefined
+       keywords, it may also be possible to determine the keywords
+       automatically. Methods for this could include:
+       \begin{itemize}
+         \item{Extracting keywords from pages which the user previously
+	 called.}
+	 \item{Using keywords that often appear in REFERER search requests.}
+	 \item{Extracting keywords from the users own pages.}
+       \end{itemize}
+     \subsection*{Language match}
+       \textbf{Description:} A page is considered interesting when the document
+       is in a certain language.
+       \\
+       \textbf{Status:} This function has not yet been implemented.
+       \\
+       \textbf{Procedure:} In the simplest case the function will simply
+       return $ 1 $ when the page is in the desired language or $ 0 $ otherwise.
+       One could also apply different values to different languages. (e.g. $1$
+       to english, $0.5$ german).
+       \\
+       \textbf{Comments:} This may be either used instead of a filter (with 
+       a high weight), or with a lower weigth to prefer pages of a particular
+       language.
+   \section*{Filters}
+     \subsection*{Language Filter}
+       This filter will drop all URLs that are not of a specific language.
+     \subsection*{Document Type Filter}
+       This filter will drop all URLs that do not serve a specific document type
+       (e.g. \verb!text/html!). This may be desirable because the user has no
+       means of viewing certain document type, or they would be meaningless in
+       the application.
+     \subsection*{Alive Filter}
+       This filter will drop all URLs that are not \textit{alive}
 \end{document}
+
