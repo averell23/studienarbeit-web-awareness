@@ -235,19 +235,30 @@
 	 \label{domaintest}
        \end{figure}
      \subsection{Finding related places} 
-       The central processing step of the system consists of a network of
-       \textit{relation finder} objects. Each relation finder will examine a web
-       place (URL) and attempt to find other places which are related to it. 
+       A network of \textit{relation finders} is the central processing unit of 
+       the DoorStep system. A \textit{relation} finder is an object that will 
+       examine a web place (an URL) and attemps to find other URLs that are 
+       related to it. In the following definitions, the term \lq\lq URL\rq\rq\ 
+       is used as a convenient shorthand for \lq\lq web place\rq\rq . However, 
+       these URL objects do not only contain the resource locator as described 
+       in \cite{url}, but \emph{all} information the system has gathered about 
+       the web place addressed by that locator. This includes both information 
+       about  the resources served from that URL (e.g. document type, hyperlinks) 
+       and information retained from the original visit event (if the URL is a 
+       starting point).
        \begin{definition}
        An URLs $ u_1 $ is related to another URL $ u_2 $ by some relation 
        $ \rightarrow $
        ($ u_1 \rightarrow u_2 $) if it has some characteristic $ c $ in regard
        to $ u_2 $. The characteristic can usually described by a boolean
-       relationship function: $ c = r(u_1, u_2) $:
+       relationship function: $ c = r_{\rightarrow}(u_1, u_2) $:
        \[
-         r(u_1, u_2) = \hspace{1mm} \mbox{true} \hspace{2mm} 
-	 \Leftrightarrow \hspace{1mm} u_1 \rightarrow u_2
+         r_{\rightarrow}(u_1, u_2) = \hspace{1mm} \mbox{true} \hspace{2mm} 
+	     \Leftrightarrow \hspace{1mm} u_1 \rightarrow u_2
        \]
+       $ U_{\rightarrow}(u_x) $ is the set of all URLs that a given URL $ u_x $ 
+       is related to (by the relation $ \rightarrow $), and it's members are 
+       called the \emph{relatives} of $ u_x $.
        \end{definition}
        In the graph model of the network, this kind of relation is equivalent
        with a directed edge from $ u_1 $ to $ u_2 $, and we say that $ u_1 $ is
@@ -261,14 +272,44 @@
        \[
          u_1 \leftrightarrow u_2 \Rightarrow u_2 \leftrightarrow u_1 
        \]
-       for all possible URLs $ u_1 $ and $ u_2 $.
+       for all possible URLs $ u_1 $ and $ u_2 $. In the case of a strong 
+       relationship, $ U_{\leftrightarrow}(u_x) $ will be an equivalency 
+       class, and $ \leftrightarrow $ an equivalency relation.
        \end{definition}
+       When a relation finder $ F $ examines an URL $ u_x $, it will attempt to 
+       find a set of URLs to which $ u_x $ is related by some relation 
+       $ \rightarrow_F $. It isn't neccessary that the relation finder finds 
+       \emph{all} relatives of $ u_x $, a subset of $ U_{\rightarrow_F}(u_x) $ 
+       will suffice. In practice, the relation finder will only be able to find 
+       all relatives if $ U_{\rightarrow_F}(u_x) $ can be computed from $ u_x $ 
+       without further knowledge (i.e. if $ u_x \rightarrow_F u_y $ means 
+       $ u_x $ contains a hyperlink to $ u_y $ then $ u_x $ contains all 
+       information to compute $ U_{rightarrow_F}(u_x) $). In all other cases the 
+       relation finder will contain a heuristic that selects a set of 
+       \textit{candidate} URLs that are possibly related to $ u_x $. From these 
+       candidates it will then select the relatives of $ u_x $. In practice the 
+       heuristic will often include the use of a web search engine like 
+       \cite{google}. Those engines have several properties that make the well 
+       suited for relation finded an will be discussed in detail in the next 
+       section.
+       
        \begin{figure}[ht]
          \centering
-	 \includegraphics[width=10cm]{relations}
-	 \caption{Data flow through different relation finder instances}
-	 \label{relations}
+	     \includegraphics[width=10cm]{relations}
+	     \caption{Data flow through different relation finder instances}
+	     \label{relations}
        \end{figure}
+       The relation finders are arranged in a network structure like shown in 
+       Figure \ref{relations}. A relation finder reads a set of URLs from it's 
+       input and finds related URLs for each of them. The relation 
+       finder then passes the result set either to the output of the relation 
+       finding phase or to the input of one or more relation finders (including 
+       itself).
+       
+       In the graph model, a relation finder will work on a single node at a 
+       time, attempting to find edges that go from the original node to 
+       neighbouring ones. The nodes that are found in this way may then then be 
+       used as starting points for further relation finders.
      \subsection{Degrees of relationship}
        \begin{figure}[ht]
        \centering
@@ -277,8 +318,8 @@
 	 \label{degrees}
        \end{figure}
        The flexible setup of the relation finders means that the resulting 
-       URLs may have
-       different \textit{degrees} of relationship to the start URL. 
+       URLs may have different \textit{degrees} of relationship to the start 
+       URL. 
        \begin{definition}
        If two URLs $ u_a $ and $ u_b $ are directly related by any given
        relationship $ \bullet $ (i.e. if $ u_a \bullet u_b $), 
@@ -289,11 +330,42 @@
        $ u_a \bullet u_b$ and $ u_b \odot u_c $, then $ u_a $ and $ u_c $ are
        related in the second degree)
        \end{definition}
-       Thus, the greater the degree of relationship, the \lq\lq farther
-       removed\rq\rq\ the URL is from it's relative. The notion of degrees of
-       relationship gives us an intuitive measure of the \lq\lq distance\rq\rq\
-       from the starting point and has proven to be useful for actual
-       implementations of the system.
+       The degree of relationship is the same as the length of a path between 
+       two nodes in the graph model, and is an intuitive metric of how 
+       \lq\lq far\rq\rq\ one web place is from another. Since this value is very 
+       useful during processing the relation finders will mark all URLs with the 
+       degree of relationship they have towards the original starting place.
+     \subsection{Search Engines and Relation Finding}
+       Commercial web search engines like \cite{google} or \cite{altavista} have 
+       some properties that make them well-suited for finding related URLs: They 
+       use sophisticated web crawling and indexing techniques to build a 
+       comprehensive index of the web, which can then be queried efficiently in 
+       a multitude of ways. Usually the engines not only allow simple keyword 
+       searches but allows empower the user to restrict the results to certain 
+       languages, resource types or domain names. Some, like Google\cite{google} 
+       even maintain the notion of related pages themselves, in features like 
+       \lq\lq Find related pages\rq\rq\ or \lq\lq Find similiar\rq\rq . 
+  
+       Search engines will also use sophisticated ranking techniques, and 
+       although the search engine rankings may or may not be useful in the 
+       DoorStep ranking phase, they can always be used to select the best 
+       possible candidates for the relation finding heuristic.
+       
+       Although the algorithms and techniques used within commercial search 
+       engines are usually classified as trade secrets, it can be fairly assumed 
+       that new research results are quickly adopted, due to the strong 
+       competition between the different companies.
+       
+       The main drawback of commercial search engines (besides the \lq\lq black 
+       box\rq\rq design) is that they are, well, commercial. Usually theses 
+       engines may only be used freely for personal, interactive requests. An 
+       example for these conditions are Google's terms of use\cite{googletou}:
+       
+       FIXME: Cite TOU
+       
+       This means that publicly available DoorStep system will have to license 
+       the use of the search engine or find a free one if it does not want to 
+       build it's own web index (which is very demanding).
      \subsection{Rating function}
        Once a set of related URLs is found, one or more 
        \textit{rating functions} will be applied to the URLs. The goal
@@ -330,8 +402,14 @@
        processing steps. A filter will typically check if an URL matches a
        predefined condition and discard it if it doesn't.
        
-       Filtering does not change the system in any substantial way but was added
-       to remove \lq noise\rq\ and speed up processing.
+       Filtering can be used to remove \lq\lq noise\rq\rq\ from the input, to 
+       speed up processing and also to remove the problem of 
+       \lq\lq circular visit\rq\rq : When DoorStep systems are universally 
+       employed, requests from one system would be registered as visits by 
+       another system and the DoorStep systems would start visiting each other. 
+       This can be avoided when the DoorStep system uses an unique 
+       \verb$User-Agent:$ string and all visits by that agent are filtered out 
+       before the processing starts.
   \section{Examples of relations}
     These are some examples of relations between URLs that can (or have) been
     used in implementations of the system.
@@ -410,7 +488,6 @@
       places} (i.e. URLs, Figure \ref{urlxml}). Each module will read XML 
       documents of one of those formats and will produce a document in the URL 
       description format as an output.
-      
       
       \begin{figure}[ht]
 \begin{verbatim}
@@ -576,16 +653,39 @@
       always rank well, since the the rating functions use the same keywords. We 
       also found that places related to well-rated URLs 
       * Will they also rank well?
-  \section{Conclusions and Further Work}
-    In this work we showed that, using the notion of \textit{relations} between
-    web places, it is possible to build a system that can help to visualize the
-    connections between a site and the visitors. The system should
-    renew the hosts' interest in maintaing his own web place and, by allowing a
-    look into the virtual surroundings, give new incentives for improvements. A
-    test installation has been well recieved within the group, and the results
-    were interesting and suprising. On one occation a researcher even messaged us
-    if we could \lq\lq wind back\rq\rq\ the slide show to an interesting page
-    that he saw -- this feature will be implemented in a future version.
+  \section{Privacy: Reassuring the conciderations}
+    When explaining this projects to people outside the research community, more
+    often than not they would bring up privacy concerns. For example during a
+    presentation a student would ask if \lq\lq this is doggy ground\rq\rq\ ,
+    other people referred to the procedure as \lq\lq peeping\rq\rq\ or even
+    \lq\lq spying\rq\rq . Despite the fact that information about visitors is
+    recorded almost everywhere on the web and secret spying mechanisms are
+    quite common, many people still believed that it is a place of anonymity
+    where their actions go unnoticed. When confronted with the fact
+    that sensitive information can be collected without their knowledge, within a system that they do not
+    understand, they react with anxiety.
+    
+    Legally, the DoorStep system is \lq\lq safe\rq\rq , because it does not 
+    collect personal information. Nevertheless, as professionals working in the 
+    field we have a responsibility to set standards for the handling of 
+    sensitive information and to educate users about the dangers and benefits 
+    involved with the new technologies. For the DoorStep system an informational 
+    note, informing visitors about the tracking process, should be sufficient. 
+    Still, information within web server log files should always be dealt with 
+    cautiously: \textit{People using the HTTP protocol to provide data are 
+    responsible for ensuring that such material is not distributed without the 
+    permission of any individuals that are identifiable by the published 
+    results}. \cite{http}\cite[Apache web server wins Big Brother Award]{bigBro} 
+    \section{Conclusions and Further Work} In this work we showed that, using 
+    the notion of \textit{relations} between web places, it is possible to build 
+    a system that can help to visualize the connections between a site and the 
+    visitors. The system should renew the hosts' interest in maintaing his own 
+    web place and, by allowing a look into the virtual surroundings, give new 
+    incentives for improvements. A test installation has been well recieved 
+    within the group, and the results were interesting and suprising. On one 
+    occation a researcher even messaged us if we could \lq\lq wind back\rq\rq\ 
+    the slide show to an interesting page that he saw -- this feature will be 
+    implemented in a future version.
     
     For interested users we will also keep a public DoorStep web server running
     so that everyone with a spare machine will be able to use the system.
@@ -606,30 +706,6 @@
     modifications to the visitor's client software. Other options would include
     to use information from existing profiling systems (FIXME:REFER TO SUCH) or
     information from user accounts.
-  \section{Privacy: Reassuring the visitors}
-    When explaining this projects to people outside the research community, more
-    often than not they would bring up privacy concerns. For example during a
-    presentation a student would ask if \lq\lq this is doggy ground\rq\rq\ ,
-    other people referred to the procedure as \lq\lq peeping\rq\rq\ or even
-    \lq\lq spying\rq\rq . Despite the fact that information about visitors is
-    recorded almost everywhere on the web and secret spying mechanisms are
-    quite common, many people still believed that it is a place of anonymity
-    where their actions go unnoticed. When confronted with the fact
-    that sensitive information can be collected without their knowledge, within a system that they do not
-    understand, they react with anxiety.
-    
-    Legally, the DoorStep system is \lq\lq safe\rq\rq , because it does not
-    collect personal information. Nevertheless, as professionals working in the
-    field we have a responsibility to set standards for the handling of sensitive
-    information and to educate users about the dangers and benefits involved with
-    the new technologies. For the DoorStep system an informational note,
-    informing visitors about the tracking process, should be sufficient.
-    Still, information within web server log files should always be dealt with
-    cautiously: \textit{People using the HTTP protocol to provide data are
-    responsible for ensuring that such material is not distributed without the
-    permission of any individuals that are identifiable by the published
-    results}. \cite{http}\cite[Apache web server wins Big Brother
-    Award]{bigBro}
   \begin{thebibliography}{99}
     \bibitem{webaware} Hans-W. Gellersen and Albrecht Schmidt.
     Look who's visiting: supporting visitor awareness in the web.
@@ -640,6 +716,7 @@
     \bibitem{url} RFC 1738. Uniform Resource Locators (URL) 
     \bibitem{logfile} Log file RFC.
     \bibitem{google} Google URL: http://www.google.com/
+    \bibitem{googletou} Google: Terms of Use
     \bibitem{http} HTTP RFC
     \bibitem{dns} RFC 1035. Domain Names - Implementation and Specification
     \bibitem{bigBro} Apache Web Server wins Big Brother Award 2000 in Germany.
