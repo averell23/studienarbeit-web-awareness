@@ -1,0 +1,63 @@
+\documentclass[a4paper]{danarticle}
+\usepackage{a4}
+\pagestyle{empty}
+\sloppy
+
+\begin{document}
+  \section*{The Test Platform (Gilbert)}
+    \subsection*{Description}
+      To test different methods of URL extraction, I developed an extensible
+      framework that would allow the easy addition and removal of processing
+      steps. Most of the actual implementation was done in Java, but since
+      all cummunication is done through XML, modules can be written in any
+      programming language.
+    \subsection*{Processing Steps}
+      FIXME: Enter processing diagram here \\
+      \begin{enumerate}
+        \item{The original log file data is converted into the LOG\_XML format.}
+        \item{The \textbf{extraction} converts the LOG\_XML data into an url list
+	      in the URL\_XML format.}
+        \item{After the extraction, there may be a chain of \textbf{refiners}. 
+	      Each refiner may modify the URL\_XML list in any way. Since the 
+	      refiners are in a chain, the output of one refiner will be the 
+	      input for the next one.}
+        \item{The \textbf{presentation} is not defined by the framework. It will
+	      usually consist of compiling the URL\_XML output of the last
+	      refiner into a suitable display format.}
+      \end{enumerate}
+      In addition to this the Java implementation allows each extractor and
+      refiner to contain \textbf{filters}. Filters are meant to discard 
+      unwanted elements from the input before processing takes place.
+      FIXME: ADD filter diagram.\\
+      FIXME: ADD LOG\_XML example\\
+      FIXME: ADD URL\_XML example\\
+    \subsection*{Extractor Designs}
+      \subsubsection*{Straight Extraction}
+        This extraction method works on visits originating from IP addresses. 
+	The extractor will try to resolve the address into a valid DNS hostname
+	and, if successful, perform the following steps:
+	\begin{enumerate}
+	  \item{Try if the hostname is alive.}
+	  \item{Iterate through all subdomains contained in the hostname, and
+	        try if the address www.\{subdomain\} is alive.}
+          \item{If an address is found to be alive, the url is written to the
+	        output.}
+	\end{enumerate}
+	(In this context an address is said to be \textit{alive} if there is a
+	service on the standard http port that responds to GET or HEAD requests.
+	FIXME: ADD Example \\
+    \subsection*{Refiner Designs}
+      \subsubsection*{Search Engine Refinement}
+        This refiner will use a standard web search engine (such as AltaVista
+	or Google) to find more urls. The extractor uses a predefined set
+	of keywords which are deemed to be interesting for the user.
+	The extractor will take an url from the input and will search this
+	url's domain for the given keywords. The results of this
+	search are then written to the output.
+      \subsubsection*{Meta Refinement}
+        This refiner enriches the existing url information to faciliate the
+	comparison and ranking of the results. The refiner will try to establish
+	a http connection to a url and if successful will read the 
+	<title> and some <meta> tags (like keywords) from the response. This
+	information will then be written to the output. 
+\end{document}
