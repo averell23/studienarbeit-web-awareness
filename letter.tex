@@ -1,0 +1,68 @@
+\documentclass[a4paper]{danarticle}
+\usepackage{a4}
+\pagestyle{headings}
+\sloppy
+
+\begin{document}
+  \section{Visitor awareness on the Web: Studienarbeit Daniel Hahn}
+    This should be a short exploration on what topics should be included in the
+    final work, and what the results should be
+    \subsection{Visitors on the web}
+      The situation is the following: We have some information about the
+      visitors/visits to a web site (we could even gather more). We want to make
+      the host aware of her visitors, and find out if there are interesting
+      places on the web which the visitors are connected with. This takes up the
+      topic of a recent paper of Gellersen/Schmidt\footnote{Complete details
+      for paper still missing here...} an tries to expand it.
+    \subsection{Parts of the system}
+      To do all this, I want to create a system which performs basically the
+      following steps: Gather information about visitors. Use this information
+      to find places on the web (e.g. URLs). Find out which of these are most
+      interesting to the user. Present these to the user, making her aware of
+      what's going on.
+      \subsection{Topics on information gathering}
+        For a start, gathering information about visitors means parsing and
+	understanding log files and I may do some basic classification (type of
+	visitor, location, etc.). Further research could go into finding other
+	ways of gathering information, e.g. having user agents that
+	transmit interesting URLs during requests. Also, the existing
+	information could be analyzed to find more metainformation (like: "`this
+	is a regular visitor"')
+      \subsection{Topics on finding places on the Web}
+        One can imagine different techniques to extract interesting URLs from
+	the raw data: From simple mechanisms like looking up hosts in the
+	visitor's domain to sophisticated search algorithms and the use of the
+	visitor's search keywords and links, everything is possible.
+	My aim is to develop such methods, to analyse them and to evaluate their
+	quality in terms of how "`interesting"' the results are (and also, under
+	which conditions they will perform best).
+      \subsection{Topics on measuring how interesting places are}
+        Once URLs are found, one has to decide which are likely to be the most
+	interesting for the host to look at. This could be done by simply using
+	statistical methods (e.g. showing the page that came up most often),
+	but more sophisticated methods are also possible: One could look for
+	certain keywords or for simililarities with other interesting pages.
+	My objective here would be to develop such techniques and do a
+	preliminary analysis of their performance (because the
+	"`interestingness"' can of course only be measured through an actual
+	user study).
+      \subsection*{Topics for presenting the data}
+        To present the data, I would need to implement a device that actually
+	allows the host to make use of the information. This could, for example,
+	be a web pad that shows links to various sites on the net.
+    \subsection{Testbed implementation}
+      I also aim to come up with a sensible system architecture and a testbed
+      implementation to analyse the various methods. The implementation will
+      probably rather simple to begin with, but should evolve during the
+      process. 
+    \subsection{Further topics}
+      There are other interesting research topics connected with this area. One
+      would be an user study to determine the actual usefulness of the system,
+      another an analysis of the privacy issues.
+    \subsection{Closing note}
+      The topics 1.4 and 1.5 offer probably the most interesting research
+      possibities and will probably be looked into more detailled than the other
+      topics.
+\end{document}
+
+

@@ -1,0 +1,28 @@
+\documentclass[a4paper]{danarticle}
+\usepackage{a4}
+\pagestyle{headings}
+\sloppy
+\usepackage[dvips]{graphicx}
+ 
+ 
+\begin{document}
+  \author{Daniel Hahn}
+  \title{Memo: Visitor Awareness Architecture}
+  \maketitle
+
+  \section*{Modules}
+    \begin{itemize}
+      \item{\textbf{Visit collection:} Multiple instances that report 
+            visits}
+      \item{\textbf{URL extraction:} Extracts URLs from existing visits.}
+      \item{\textbf{URL ranking:} Ranks a list of URLs.}
+    \end{itemize}  
+    Also, there are two basic databases that could be used: A visit database and
+    an URL database.
+    \subsection*{Module Interaction}
+      The modules should interact in a transparent way - data exchange through
+      XML is possibly desirable. The question is, which modules should initially
+      begin the different procedures?
+    \subsection*{Protocol overhead}
+      A great modularization brings with it a big protocol overhead. 
+\end{document}

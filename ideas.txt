@@ -1,6 +1,77 @@
 Idea Scrabble File
 Daniel Hahn
 
+* DECISION:
+	* PRIORITY: METHODS/ARCHITECTURE?
+	* ARCHITECTURE: MONOLITHIC/MODULAR?
+
+* DESIGN SPACE: ARCHITECTURE
+	* Modular
+	* Extensible
+	* Standards-Based
+	* On the other hand: Avoid too much architecture overhead
+
+* DESIGN SPACE: METHODS
+	* Visit collection
+		- Logfile
+		- Signup
+		- Protocol (Automatic)
+		- Request Feedback (knocking)
+	* URL extration methods
+		- Direct (like before)
+		- Search visitor's domain
+		- Use visitor's searchwords
+		- Use visitor's links
+	* URL ranking mtheods
+		- By statistics (hit count etc.)
+		- By keyword matching
+		- By user feedback 
+	* Display methods
+
+* ARCHITECTURE IDEAS:
+	* Monolithic:
+		* Just one engine
+		* Modules (extraction, ranking) are classes
+		* Visits supplied as XML
+		* Ranked URL list presented as XML
+		+ Easy to implement
+		+ Less protocol overhead
+		- Tied to particular programming language
+		- Extensions only within the engine
+	* Two-Engine
+		* One engine for visit collection
+		* One engine for URL extraction and ranking
+		* Modules (extraction, ranking) are classes
+		* Visits supplied as XML
+		* Ranked URL list presented as XML
+		* Communication between engines: Standard lightweigt protocols
+		* Modules (extraction, ranking) as classes or services
+		+ URL extraction and ranking tightly coupled
+		+ Separation between visits and results
+		o Modularization depends on module framework
+		o Extensability depends on module framework
+	* Full Modular
+		* One engine for visit collection
+		* One engine for URL extraction
+		* One engine for URL ranking
+		* Visits supplied as XML
+		* Ranked URL list presented as XML
+		* Modules (extraction, ranking) are independent services
+		* Communication between components through lightweight protocols
+		+ Good modularization
+		+ Independent of particular programming language
+		+ Easy to extend
+		- High protocol overhead
+		- Extensibility depends on protocol 
+		- Rather difficult to implement
+		- Tight coupling between elements is lost
+
+* PROTOCOLS TO USE
+	* Full-Blown Protocols & Database access (SQL, CORBA, etc...)
+	* Web Protocols & Formats (HTTP, XML, SOAP...)
+	* Simple Low Level Protocols (UDP, TCP...)
+
+
 DECISIONS IN THE DIFFERENT AREAS (Subject to sudden change of mind ;-)
 
 PART 0: WHERE TO GO
@@ -121,10 +192,12 @@ ADDENDUM: SNIPPETS
 
 GLOSSARY
 
-thing 	- 	some random information we learn about a visitor
-visit	-	the action of visiting a web site. could correspond to a logfile
-		line.
-visitor	-	Entity visiting a web site
+thing 		- 	some random information we learn about a visitor
+visit		-	the action of visiting a web site. could correspond to a logfile
+			line.
+visitor		-	Entity visiting a web site
+CSCW		- 	Conference on Computer Supported Cooperative Work
+idiosyncratic 	-	strange, personal, odd
 
 PERL MODULES INSTALLED
 
@@ -134,6 +207,8 @@ HTTP::Response;
 (libwww)
 DBI
 DBD::mysql
+XML::Writer
+XML::Parser (needs expat toolkit!)
 
 SOFTWARE INSTALLED
 JDK 1.4.0

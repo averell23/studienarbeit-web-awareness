@@ -1,0 +1,97 @@
+\documentclass[a4paper]{danarticle}
+\usepackage{a4}
+\pagestyle{headings}
+\sloppy
+ 
+ 
+\begin{document}
+  \author{Daniel Hahn}
+  \title{Memo: First overview}
+  \maketitle
+  
+  \section*{Architecture layout}
+    The architecture should satisfy the following requirements:
+    \begin{itemize}
+      \item{Modular. In particular: allow to have generic \textit{visits} 
+            and clients. One should also be able todifferent methods 
+	    for extracting/ranking URLs}
+      \item{Standards-Based. It would be a bonus if communication between 
+            the modules uses standard web mechanisms and protocols, like
+	    HTTP and XML. This would allow for easy extensibility and
+	    distributed use.}
+      \item{Simple to implement. Flexibility must not impose a protocol
+            overhead that would make the implementation prohibitively
+	    time-consuming.}
+    \end{itemize}
+    \subsection*{Components}
+      An architecture could possibly consists of elements like:
+      \begin{itemize}
+        \item{Visit sources. These are like sensors which just record visits
+	      and pass them on as XML objects.}
+	\item{Visit collection and classification engine. This would collect 
+	      the visit records and classify them (connect visits to visitors,
+	      classify types of visitors, etc.) Clients could then ask this
+	      engine to give them visitors/visits...}
+	\item{URL extraction. This would take visitor and visit information, and
+	      extract URLs from it. Each method of URL extraction should be an
+	      independent module}
+	\item{URL ranking. This takes a list of URLs and ranks them according
+	      to some criteria. Each method of ranking should be an independent
+	      module.}
+	\item{URL engine. This could be an engine that interacts with the
+	      extraction and ranking engines, and supplies the client with
+	      a list of ranked URLs. There could be multiple instances of this
+	      for different types of clients.}
+      \end{itemize}
+      This list is of course not complete or finite, but it should identify
+      possible elements of the architecture.
+    \subsection*{Data records}
+      \subsubsection*{Visit}
+      \subsubsection*{Visitor}
+  \section*{Methods to collect visits}
+    \subsection*{Virtual visitors}
+      Since we are not interested in the visit \textit{per se}, but in the
+      visitor that is behind it, each visit could be assigened to a
+      \textit{virtual visitor}. The visitor is virtual because the visit record
+      itself may not carry the information to link it to an actual person.
+    \subsection*{Classification of visits/visitors}
+    \subsection*{Metainformation and Statistics}
+  \section*{Methods for URL extraction}
+    There are probably two methods here: Extract URLs from each \textit{visit}
+    or extract them from each \textit{visitor}. The second approach seems more
+    useful on the first glance.
+    \subsection*{Prefiltering visits}
+      This isn't in the Visit Collection chapter because we probably don't want
+      to discard the visits upon arrival. However, a prefilter could improved
+      the usefulness of the URL extraction mechanism.
+    \subsection*{Direct Extraction}
+      This would include methods like trying the client host itself, trying
+      subdomains, doing reverse DNS lookups on IPs and traceroute information.
+    \subsection*{Domain-specific keyword search}
+      This would include searching the given domain for specific keywords,
+      either with a standard search engine, an own method or a search engine on
+      that site. Keywords could be predefined or could be dynamically derived.
+    \subsection*{Search using visit keywords}
+      Search the web, using keywords that are supplied by the visitor. This
+      could include searchstring delivered through the \textit{referer} field,
+      or keywords supplied in some other manner.
+    \subsection*{Using links from pages}
+      Search web pages for links to other places. This could be trickier to
+      implement since it would work on URLs rather than on visits.
+  \section*{Methods for URL ranking}
+    \subsection*{Statistical ranking}
+      Use hit counts and similiar information to establish a \textit{best-of}
+      relationship.
+    \subsection*{Keyword-Based ranking}
+      Rank pages according to the occurrence of keywords.
+      \subsubsection*{Automatic keyword extraction}
+        Extract keywords from own pages as well as from foreign pages, to allow
+	ranking and sorting.
+  \section*{Display: Methods to create Awareness}
+    This would be a sample application, e.g. a shared display. 
+  \section*{Privacy considerations}
+    We should look into the privacy issues brought up by tracking down visitors.
+    (\textit{see also: http protocol RFC, section 15)})
+  \section*{Results}
+  \section*{Future Developments}
+\end{document}
