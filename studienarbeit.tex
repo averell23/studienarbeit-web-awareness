@@ -40,7 +40,7 @@
     information about the \textit{visits} is readily available in the
     form of web server logs, the tools for displaying it (e.g. AWStats) will only
     provide statistical information but do not explore the rich context in which
-    the visits took place. 
+    the visits took place. (FIXME:MIT VISIT FLOW PAPER)
     
     Initial research into the subject by Gellersen and Schmidt\cite{webaware}
     yielded the
@@ -428,7 +428,12 @@
       If the user is interested in a certain page he has the option to stop the
       slide show and explore that page further (by following the hyperlinks on
       the page). The slide show will automatically commence after a while.
-      (FIXME:Pictures)
+      \begin{figure}[ht]
+       \centering
+	 \includegraphics[width=10cm]{javaclient}
+	 \caption{Java Based Display}
+	 \label{javaclient}
+       \end{figure}
       
       For a first user study we plan to use this software on a panel computer 
       that can easily be fitted in the user's surroundings. The machine is 
@@ -494,9 +499,59 @@
       also found that places related to well-rated URLs 
       * Will they also rank well?
   \section{Conclusions and Further Work}
-     * User study
-     * Make system more adaptive
-     * Fix the homeless visitor problem
+    In this work we showed that, using the notion of \textit{relations} between
+    web places, it is possible to build a system that can help to visualize the
+    connections between a site and the visitors. The system should
+    renew the hosts' interest in maintaing his own web place and, by allowing a
+    look into the virtual surroundings, give new incentives for improvements. A
+    test installation has been well recieved within the group, and the results
+    were interesting and suprising. On one occation a researcher even messaged us
+    if we could \lq\lq wind back\rq\rq\ the slide show to an interesting page
+    that he saw -- this feature will be implemented in a future version.
+    
+    For interested users we will also keep a public DoorStep web server running
+    so that everyone with a spare machine will be able to use the system.
+    
+    Intial user reactions within the reasearch group were positive and we now
+    plan to conduct a small user study that will allow us to study users
+    reactions over the period of a few weeks. We hope to get an impression on how
+    the use of the DoorStep system changes the host's attitude towards his own
+    web place and which places he will be most interested in. The results of the
+    user study will also go into the future development of the system.
+    
+    In the future we plan to make the DoorStep system more adaptive so that
+    rather than relying on a fixed set of keywords it will learn the user's
+    preferences and modify it's behaviour in different enviroments. We also need
+    to fix the \lq\lq homeless visitor problem\rq\rq : The most permanent
+    solution would be for the visitor to supply his own home URL \cite{webaware},
+    through an additional HTTP header field, although this would require
+    modifications to the visitor's client software. Other options would include
+    to use information from existing profiling systems (FIXME:REFER TO SUCH) or
+    information from user accounts.
+  \section{Privacy: Reassuring the visitors}
+    When explaining this projects to people outside the research community, more
+    often than not they would bring up privacy concerns. For example during a
+    presentation a student would ask if \lq\lq this is doggy ground\rq\rq\ ,
+    other people referred to the procedure as \lq\lq peeping\rq\rq\ or even
+    \lq\lq spying\rq\rq . Despite the fact that information about visitors is
+    recorded almost everywhere on the web and secret spying mechanisms are
+    quite common, many people still believed that it is a place of anonymity
+    where their actions go unnoticed. When confronted with the fact
+    that sensitive information can be collected without their knowledge, within a system that they do not
+    understand, they react with anxiety.
+    
+    Legally, the DoorStep system is \lq\lq safe\rq\rq , because it does not
+    collect personal information. Nevertheless, as professionals working in the
+    field we have a responsibility to set standards for the handling of sensitive
+    information and to educate users about the dangers and benefits involved with
+    the new technologies. For the DoorStep system an informational note,
+    informing visitors about the tracking process, should be sufficient.
+    Still, information within web server log files should always be dealt with
+    cautiously: \textit{People using the HTTP protocol to provide data are
+    responsible for ensuring that such material is not distributed without the
+    permission of any individuals that are identifiable by the published
+    results}. \cite{http}\cite[Apache web server wins Big Brother
+    Award]{bigBro}
   \begin{thebibliography}{99}
     \bibitem{webaware} Hans-W. Gellersen and Albrecht Schmidt.
     Look who's visiting: supporting visitor awareness in the web.
@@ -507,5 +562,8 @@
     \bibitem{url} URL RFC.
     \bibitem{logfile} Log file RFC.
     \bibitem{google} Google URL: http://www.google.com/
+    \bibitem{http} HTTP RFC
+    \bibitem{bigBro} Apache Web Server wins Big Brother Award 2000 in Germany.
+    http://www.big-brother-award.de/en/2000/
   \end{thebibliography}
 \end{document}
