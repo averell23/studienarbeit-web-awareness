@@ -429,6 +429,14 @@
       slide show and explore that page further (by following the hyperlinks on
       the page). The slide show will automatically commence after a while.
       (FIXME:Pictures)
+      
+      For a first user study we plan to use this software on a panel computer 
+      that can easily be fitted in the user's surroundings. The machine is 
+      equipped with a touch-sensitive panel for intuitive user interaction and 
+      should easily blend into any office enviroment. This kind of ambient 
+      display should be unobtrusive to the user while at the same time enabling 
+      him to check his web surroundings whenever he chooses to.
+      (FIXME:Screenshots,Picture)
     \subsection{Test Data}
       The test dataset is part of the HTTP log file from a research lab
       web server. The log file contains about 200.000 entries from a period of
@@ -447,7 +455,8 @@
       Almost 40\% of the requests were made by automated agents (e.g. web
       crawlers) that idendentifiable by an \verb$User-Agent$ String and 8\% of
       were referred to the site as the result of a web search (with the search
-      string showing up in the \verb$Referer$ field).
+      string showing up in the \verb$Referer$ field). (FIXME:Update numbers 
+      here)
     \subsection{Results}
       For the trials we used an \textit{extractor} module implementing the
       metric defined in (FIXME:Reference) to find living URLs, an
@@ -470,14 +479,24 @@
       place. In a purely academic setting (like ours) this problem is less
       pressing since the user's home place (or -page) is usually loacted within
       the same network from which the user enters the web. This \lq\lq homeless
-      user problem\rq\rq\ has already been observed in \cite{webaware}, and some
-      solutions have been proposed; this is definitely on of the points for
-      further research.
+      visitor problem\rq\rq\ has already been observed in \cite{webaware}, and 
+      some; this will be an issue for further research.
       
+      (FIXME:Refiner Results)
       
+      We observed that the rating functions worked quite well under most 
+      circumstances: When using keywords from our research area (like ubicomp, 
+      wearable or context), directly research-related pages (like conference 
+      home pages) would usually rank quite high, completely unrelated pages 
+      ranked zero. Indirectly related pages (e.g. researchers' web pages)
+      get a medium rating. Pages found by the web search based relation finders 
+      always rank well, since the the rating functions use the same keywords. We 
+      also found that places related to well-rated URLs 
+      * Will they also rank well?
   \section{Conclusions and Further Work}
-     We have shown that the DoorStep system is well suited to show a web host
-     his virtual surroundings, and the impressions of the
+     * User study
+     * Make system more adaptive
+     * Fix the homeless visitor problem
   \begin{thebibliography}{99}
     \bibitem{webaware} Hans-W. Gellersen and Albrecht Schmidt.
     Look who's visiting: supporting visitor awareness in the web.
