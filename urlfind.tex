@@ -6,16 +6,16 @@
  
 \begin{document}
   \author{Daniel Hahn}
-  \title{Finding Visitor-Related URLs}
+  \title{Finding Visitor-Related URLs (Draft)}
   \maketitle
   
   \section*{Introduction}
-    This short article explains an system for finding URLs wich are
+    This article explains an system for finding URLs wich are
     \textit{related} to a specific \textit{visit}. To understand the
-    function of this system it is neccessary to first understand
+    function of the system it is neccessary understand
     some of the underlying terms and concepts.
     
-    \textbf{A visit} is (in a real-life-system) most likely the
+    \textbf{A visit} in a real-life-system is (in most cases) the
     act of a person (or machine) requesting some document from a
     web server. However, it is easy to imagine that the system will
     also deal with other types of visits (like signing up to a
@@ -53,18 +53,19 @@
     	      client's net address)}
     	\item{The \textit{resource} that was requested. (The document
     	      the visitor tried to download)}
-    	\item{The \texit{time and date} of the visit.}
+    	\item{The \textit{time and date} of the visit.}
     	\item{The \textit{result} of the visit. (Successful or not?)}
     	\item{The \textit{referring entity}. (e.g. from the http REFERER field)}
     	\item{The \textit{user agent} that was used for the visit.}
     \end{itemize}
-    While This is the kind of data we start with a web enviroment will
-    offer other sources of information which the system can use:
+    This is the \textit{primary} data form the visit itself. However in
+    a web enviroment there are a number of secondary data sources which
+    the system may use:
     
     \textbf{Information available through the context of the visit:}
-    This kind of information is not directly recorded with the visit
+    This kind of information is not directly recorded with the visit,
     but is easily available when one has additional knowledge of the
-    context of the visit. Some examples would include:
+    context. Some examples would include:
     \begin{itemize}
     	\item{The geographical location. (Can be roughly deduced if 
     	      one has an idea about country-top-level-domains)}
@@ -109,12 +110,12 @@
     origin of the visit.}\footnote{This does not neccessarily
     mean that the URL is close to the \textit{visitor}, because
     the visit may contain no information about the \textit{visitor}
-    at all.
+    at all.}
     
     \subsection*{How is an URL close to the origin of a visit?}
       It is safe to assume that there can be different meanings
       of \textit{close} for differnt types of visits. Still, when
-      dealing with a visit that was originally an http request
+      dealing with a visit that was originally an http request,
       the meaning of \textit{close} is reasonably easy to define:
       
       The \textit{origin} of such a visit is the IP address or
@@ -128,14 +129,14 @@
       
       For applications where it is desireable to have a starting
       URL that is \textit{alive}, we will therefore try to find the
-      URL \textit{closest} that is closest to the URL describing
+      URL \textit{closest} to the \lq startin\rq\ URL describing
       the the \textbf{origin} and is still alive. For this, we 
       will use the follwowing definition of \textit{close}:
       An URL is \textit{closer} to one in the same subdomain 
       than to one in a different subdomain. (E.g.: \textit{i.am.here.com}
-      would be closer to \textit{visitor.am. here.com} than
+      would be closer to \textit{visitor.am.here.com} than
       \textit{elswhere.here.com}, but this would still be closer than
-      \texit{somewhere.else.org}). If the original URL describes only
+      \textit{somewhere.else.org}). If the original URL describes only
       an IP address we say that an URL is \textit{closer} to one
       in the same subnet than to one on a different network.
   \section*{Step Two: Finding Related URLs}
@@ -146,16 +147,18 @@
      \textbf{two URLs are related when they share a common
      characteristic}. 
      
-     What this characteristic is will be defined by the user of the
-     system, and there aren't many restrictions on it except that
-     for a real-world setting URLs with a given characteristic
-     should be reasonably easy to find.\footnote{Which is somehow
+     The system has no preconception about such characteristics other
+     than that -- for a real-world system -- pages with that 
+     characteristic must be resonably easy to 
+     find.\footnote{Which is somehow
      obvious: While it makes perfect sense to say that URLs can
      be related by the fact that the web author's grandmothers share
      the same maiden name one will be hard-pressed to find an
      algorithm that looks for such URLs} The system may also
-     use look for different kinds of relationships, simply by
+     look for different kinds of relationships, simply by
      repeating this step.
+     
+     //FIXME: Relation finding flow
      
      \subsection*{Examples for relations between URLs}
        \begin{itemize}
@@ -165,26 +168,33 @@
        \end{itemize}
      
      \subsection*{Different degrees of relationship}
-       The result of this processing step is a set of URLS $ U_{1} $,
-       which contains only URLs which are directly related to
-       the starting URL. We call these URLs \textit{related in the
-       first degree} to the starting URL. The system allows us to
-       take each URL $ u \element U_{1} $ and look for URLs which
-       are in turn related to $ u $. We call the resulting URLs
-       \texit{related in the second degree} to the starting URL,
-       they are members of the set $ U_{2} $.
-       // FIXME: Mathematical formula for relations
-       We can repeat this process to find URLs related in the 
+       The result of this processing step is a set of URLs $ U_{1} $,
+       which containg URLs directly related to the starting
+       URL by some relationship $ \leftrightarrow $. 
+       We call these URLs \textit{related in the
+       first degree} to the starting URL.
+       We may continue to look for URLs \textit{related in the second
+       degree} by taking each URL $ u \in U_1 $ and finding URLs related
+       to $ u $. The set $ U_2 $ of URLs related in the second degree would
+       then be:
+       \[
+        U_2 = \bigcup_{u \in U_1} u_2 \leftrightarrow u
+       \]
+       (For pratical reasons we assume that each URL is always related
+       to itself, and thus $ U_1 \subset U_2 $)
+       
+       The process can be repeated to find URLs related in the 
        $ 3^{rd} $ and $ 4^{th} $ degree, and so on.
        
-  \section{Step three: Finding URLs of interest}
+       
+  \section*{Step three: Finding URLs of interest}
     In the previous step were looking for a (probably rather large)
     set of URLs which are all somehow related to the original visit.
     Since we want to present these URLs to a user, it is now 
     neccessary to order them and find out which of them are most
     \textit{interesting} for the user. 
     The concept of \textit{intersting to the user} is again quite 
-    hard to grasp algorithmically. In this system we will therefore
+    hard to grasp algorithmically. We will therefore
     approximate \textit{interesting} with \textit{has certain
     properties that may make it interesting to the user} (e.g.
     the page contains certain keywords). Each of this properties
@@ -193,15 +203,17 @@
     $ u $. The system may use multiple \textit{interst functions}
     to check for different aspects that may be interesting
     to the user and assign a weight $ \alpha_{i} $ to each 
-    of the functions. Thus, the overall \texit{interestingness}
-    of a URL would calculate to:
-    \\ FIXME: Add formula
+    of the functions. Thus, the overall \textit{interestingness}
+    $ \iota $ of a URL would calculate to:
+    \[
+      \iota(u) = \sum_i \alpha_i f_i(u)
+    \]
   
-  \section{Filtering}
+  \section*{Filtering}
     The system will allow for filters to be applied before each
     processing step, and again after applying the 
     \textit{interest functions} (this is before displaying the
-    results}. A real-world-system will probably also filter 
+    results). A real-world-system will probably also filter 
     the \textit{visits}, electing to discard some visits before
     doing anything else.
     
