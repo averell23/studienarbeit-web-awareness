@@ -17,6 +17,7 @@
             /Keywords   (Visitors)
 }
 \newtheorem{definition}{Definition}
+\theoremstyle{remark}
 \newtheorem*{example}{Example}
 \sloppy
 
@@ -129,13 +130,22 @@
       the them. The \textit{relation finder} network is the central part of the 
       system: It follows the implicit and explicit connections that link one 
       place with it's neighbours and thus explores the virtual surroundings of 
-      the starting point.
+      the starting point. 
       
-      Each of the resulting URLs will finally be rated by a one or more 
-      \textit{rating functions} that try to determine the amount of interest the 
-      user may have in that particular web place. Once the URLs are rated they 
-      can be passed on to a display systemt that will present the web places to 
-      the user.
+      The relation finding step regards the whole network as a huge graph, of
+      which the web places (and other machines) are the vertices. A relation
+      between two web places can then be thought of as an edge of the graph,
+      connecting those places. Relations can either be directed, like
+      hyperlinks, or undirected. The relation finder will enter the graph at the
+      starting vertices found in the first step and from there explores paths to
+      neighbouring vertices.
+      
+      At the end of the relation finding phase, the system will have found a
+      cluster of web places, representing the virtual neighbourhood of the
+      visitor. Each of them will be rated by a number of \textit{rating
+      functions} in order to determine how interesting they may be to the user.
+      The rated places will then be passed on to a display system that presents
+      them to the user.
       \begin{figure}[ht]
         \centering
 	\includegraphics[width=10cm]{steps_overview}
@@ -149,99 +159,116 @@
 	 \caption{Selecting a starting place}
 	 \label{startingplace}
        \end{figure}
-       It is usually somewhat difficult to describe the relations that exist 
-       between web places and visits: A visit is fundamentally different from a 
-       web place, so they cannot easily be compared, different types of visits 
-       may relate to places in different ways and those relations are difficult 
-       to grasp algorithmically. 
+       Relations between web places are easy to describe and handle. Relations
+       between visits, visitors and places, however, are somewhat harder to
+       grasp. To avoid the complications of modeling those relations the system
+       will pick one (or several) web places that act representatives, or
+       proxies, for the visit. These are the \textit{starting places} of the 
+       relation finding process,
+       in the graph model these are the nodes from which the algorithm will
+       start exploring the edges. 
        
-       Relations between web places, on the other hand, are fairly well 
-       understood (FIXME:Reference?). For this reason the system will first 
-       attempt to find one (or several) URLs of starting points which will 
-       represent the visit during the following processing steps. To represent a 
-       particular visit, a web place has to have some strong connection with it; 
-       the system demands that \textbf{a starting point must be as close as 
-       possible to the visit source}.
-       
-       The metric that defines the \lq\lq distance\rq\rq between a visit and 
-       place will vary for different types of visits and according to the 
-       information that is available. For a system where visits are HTTP 
-       requests made by machines with valid DNS host names we will use the 
-       following metric:
-       
+       Each starting point must have a close connection to the visit that it is
+       ment to represent. In terms of the DoorStep system we demand that a
+       starting point should be \textit{as close as possible} to the visit it is
+       representing. The metric that measures the \lq\lq distance\rq\rq\ between
+       a visit and a web place will vary depending on the type of visit and the
+       information at hand, but for HTTP visits (that originate from a network
+       address) we use the following
        \begin{definition}
-       \raggedright
-       Let  
-       \begin{center}
-       \verb$a_part[n].a_part[n-1]...a_part[1]$ 
-       \end{center}
-       and 
-       \begin{center}
-       \verb$b_part[m].b_part[m-1]...b_part[1]$ 
-       \end{center}
-       be the DNS names of two
-       hosts with their respective (domain name) parts, and $ n \geq m $.
-       
-       If \verb$a_part[x]$ = \verb$b_part[x]$ for all $x$ with 
-       $1 \leq x \leq p$ then the distance between the two hosts is 
-       $n - p$
+       \label{metric}
+       The distance between two hosts with the fully qualified DNS host names
+       \verb$a_part[n].a_part[n-1]. ... .a_part[0]$ and 
+       \verb$b_part[m].b_part[m-1]. ... .b_part[0]$ of the format given in
+       \cite{dns} and with the subdomain tokens \verb$a_part[]$ and 
+       \verb$b_part[]$ is given by the number of matching right-hand tokens.
        \end{definition}
+       A similiar metric can easily be construed for hosts that have no
+       qualified DNS name but only a network address, although we found that
+       most of the visit source do have a qualified hostname and those that do
+       not weren't particularly useful either.
        
-       \begin{example}
-       If the visit originated from a host called 
-       \verb$banana.hoogla.boogla.oogla.org$ then this host will have a distance 
-       of 0 to the visit. The host \verb$yellow.hoogla.boogla.oogla.org$ will 
-       have a distance of 1, \verb$chiquita.boogla.oogla.org$ a distance of 2 
-       and so on.
-       \end{example}
+       With the metric from Definition \ref{metric}, the hostname closest to a
+       visit source is always that of visit source itself. In most cases,
+       however, this host is not really web place because there is no web server
+       running at that address -- we say that the respective URL is not
+       \textit{alive}. Having starting points that are not \textit{alive} can
+       be somewhat awkward during the relation finding phase (e.g. if trying to
+       follow the hyperlinks from the starting points), and in these cases we
+       will attempt to find \textit{alive} starting points using the algorithm
+       already used in \cite{webaware}:
        
-       Although this metric requires that the host to have a DNS hostname it 
-       would be easy to define a similiar one for hosts that only have IP 
-       addresses. In practice however it shows that most of the visit sources do 
-       have a valid DNS hostname, and those that don't are not particularly
-       useful anyway.
+       \begin{itemize}
+         \item{If the visit source is, copy it to the output}
+	 \item{As long as the hostname has more than two tokens, do the
+	 following:}
+	 \begin{itemize}
+	   \item{Try if the new hostname, prefixed with \verb$www$ is alive.}
+	   \item{If it is alive, copy it to the output.}
+	   \item{Remove the first token from the hostname.}
+	 \end{itemize}
+       \end{itemize}
        
-       With the given metric, the URL closest to 
-        
-       \subsection{Finding related places} The central step is to find URLs that 
-       are \textit{related} to the starting URL. \begin{definition} Two URLS $ 
-       u_1 $ and $ u_2 $ are \textit{related} ($ u_1 \leftrightarrow u_2 $) if 
-       they \textit{have a common characteristic} $ c $. \end{definition} 
-       Mathematically speaking, $ \leftrightarrow $ is an equivalency relation, 
-       and both $ u_1 $ and $ u_2 $ are part of the equivalency class $ 
-       U_{\leftrightarrow} $ (of all URLs related by $ \leftrightarrow $). The 
-       definition makes no further assumptions about the characteristic $ c $, 
-       which can be selected by the user. Real-life relations of URLs could be 
-       things like \lq\lq Both URLs are in the same DNS domain\rq\rq\ or \lq\lq 
-       The resources served by the URLs contain the keywords a and b\rq\rq . 
-       
-       For obvious practical reasons it is suggested that relations should also
-       fulfil the following criteria: I must be reasonably easy to determine if
-       two URLs are related or not and it be reasonably easy to find a
-       substantial subset of $ U_{\leftrightarrow} $. 
-       \\
+       For example, if a visit comes from the host
+       \verb$banana.hoogla.boogla.org$, the algorithm would first try that
+       host itself (Distance 0), then \verb$www.hoogla.boogla.org$ (Distance 1),
+       then \verb$www.hoogla.boogla.org$ (Distance 2) and finally
+       \verb$www.boogla.org$ (Distance 3). If any of those hosts is
+       \textit{alive} it may be used as a starting point. If that is not the
+       case, the algorithm fails.
+       \begin{figure}[ht]
+         {\ttfamily
+         \begin{tabbing}
+           \hspace{5mm} \= \hspace{5mm} \= \hspace{5mm} \= \hspace{5mm} \= \\
+	   @subdom\_parts = \textit{split}(\verb$/\./$, visit\_source); \\
+	   \\
+	   \textbf{if} ( \textit{\&alive}(join(\verb$'.'$, @subdom\_parts) \{
+	   print OUT @subdom\_parts; \} \\
+	   \textbf{for} \verb-( ; $#parts > 0 ; shift(@parts) )- \{ \\
+	   \>  \textbf{if} ( \textit{\&alive}("www." . join(\verb$'.'$,
+    	   @subdom\_parts))) \{ \\
+	   \> \> print OUT www . @subdom\_parts; \\
+	   \> \} \\
+	   \} \\
+         \end{tabbing}}
+	 \caption{Algorithm for selecting alive starting points}
+	 \label{domaintest}
+       \end{figure}
+     \subsection{Finding related places} 
+       The central processing step of the system consists of a network of
+       \textit{relation finder} objects. Each relation finder will examine a web
+       place (URL) and attempt to find other places which are related to it. 
+       \begin{definition}
+       An URLs $ u_1 $ is related to another URL $ u_2 $ by some relation 
+       $ \rightarrow $
+       ($ u_1 \rightarrow u_2 $) if it has some characteristic $ c $ in regard
+       to $ u_2 $. The characteristic can usually described by a boolean
+       relationship function: $ c = r(u_1, u_2) $:
+       \[
+         r(u_1, u_2) = \hspace{1mm} \mbox{true} \hspace{2mm} 
+	 \Leftrightarrow \hspace{1mm} u_1 \rightarrow u_2
+       \]
+       \end{definition}
+       In the graph model of the network, this kind of relation is equivalent
+       with a directed edge from $ u_1 $ to $ u_2 $, and we say that $ u_1 $ is
+       \textit{weakly related} to $ u_2 $. \textit{Strong relations} are
+       equivalent to undirected edges.
+       \begin{definition}
+       Two URLs $ u_1 $ and $ u_2 $ are \emph{strongly related} by a relationship
+       $ \rightarrow $ if $ u_1 \rightarrow u_2 $ as well as 
+       $ u_2 \rightarrow u_1 $. A relationship $ \leftrightarrow $ is called a
+       \emph{strong} relationship if
+       \[
+         u_1 \leftrightarrow u_2 \Rightarrow u_2 \leftrightarrow u_1 
+       \]
+       for all possible URLs $ u_1 $ and $ u_2 $.
+       \end{definition}
        \begin{figure}[ht]
          \centering
 	 \includegraphics[width=10cm]{relations}
 	 \caption{Data flow through different relation finder instances}
 	 \label{relations}
        \end{figure}
-       To actually find related URLs the system will use a number of
-       \textit{relation finders}. Each of those is an object that will take a
-       URL $ u $ and tries to find a set of URLs related to it by some relation
-       $ \leftrightarrow_{x} $. It is not necessary that a relation finder
-       finds \textit{all} the URLs related to $ u $, a subset 
-       $ U_{\mbox{found}} $ will
-       suffice. (It is $ U_{\mbox{found}} \subseteq U_{\leftrightarrow_x} $.) 
-       Since the original URL $ u $
-       is related to itself it will also be in the output: 
-       $ u \in U_{\mbox{found}} $.
-       
-       A system may contain different relation finders for different relations. 
-       During the
-       relation finding process each relation finder may either pass it's output to
-       any other relation finders (including itself) \textit{or} to
-       the output, allowing for a very flexible setup (Figure \ref{relations}). 
      \subsection{Degrees of relationship}
        \begin{figure}[ht]
        \centering
@@ -610,10 +637,11 @@
     \bibitem{windows} Liechti O, Siefer N and Ichikawa T.
     A non-obtrusive User Interface for Increasing Social Awareness on the 
     World Wide Web. Personale Technologies 3 (1\&2), 1999.
-    \bibitem{url} URL RFC.
+    \bibitem{url} RFC 1738. Uniform Resource Locators (URL) 
     \bibitem{logfile} Log file RFC.
     \bibitem{google} Google URL: http://www.google.com/
     \bibitem{http} HTTP RFC
+    \bibitem{dns} RFC 1035. Domain Names - Implementation and Specification
     \bibitem{bigBro} Apache Web Server wins Big Brother Award 2000 in Germany.
     http://www.big-brother-award.de/en/2000/
   \end{thebibliography}
