@@ -287,6 +287,8 @@
        with a directed edge from $ u_1 $ to $ u_2 $, and we say that $ u_1 $ is
        \textit{weakly related} to $ u_2 $. \textit{Strong relations} are
        equivalent to undirected edges.
+       Examples of relations include hyperlinks (weak) or web places that are
+       within the same DNS domain (strong). 
        \begin{definition}
        Two URLs $ u_1 $ and $ u_2 $ are \emph{strongly related} by a relationship
        $ \rightarrow $ if $ u_1 \rightarrow u_2 $ as well as 
@@ -299,6 +301,7 @@
        relationship, $ U_{\leftrightarrow}(u_x) $ will be an equivalency 
        class, and $ \leftrightarrow $ an equivalency relation.
        \end{definition}
+
        When a relation finder $ F $ examines an URL $ u_x $, it will attempt to 
        find a set of URLs to which $ u_x $ is related by some relation 
        $ \rightarrow_F $. It isn't neccessary that the relation finder finds 
@@ -315,7 +318,6 @@
        \cite{google}. Those engines have several properties that make the well 
        suited for relation finded an will be discussed in detail in the next 
        section.
-       
        \begin{figure}[ht]
          \centering
 	     \includegraphics[width=10cm]{relations}
