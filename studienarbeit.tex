@@ -16,7 +16,8 @@
             /Author     (Daniel Hahn)
             /Keywords   (Visitors)
 }
-\newtheorem*{definition}{Definition}
+\newtheorem{definition}{Definition}
+\newtheorem*{example}{Example}
 \sloppy
 
 \begin{document}
@@ -59,6 +60,8 @@
     We will introduce a system for finding places that are \textit{related} to
     visitors and will present the results which we gathered from a first
     implementation of this system.
+    
+    (FIXME:Some papers on standard web Techniques WWW10)
   \section{The DoorStep System}
     DoorStep is a system that attempts to find \textit{places} which are somehow
     \textit{related} to \textit{visits}. We assume that each
@@ -81,8 +84,34 @@
     \end{minipage}
     \end{center}
     There are documents (such as \cite{logfile}) that describe in great detail 
-    the 
-    data available from web server log files. Additionally to
+    the data available from web server log files. The most important fields used 
+    in the DoorStep system are:
+    \\
+    
+    \textbf{Client Address:} The network address of the client system to which 
+    the requested resources are sent. This is either the IP address of the 
+    computer which is running the visitor's web browser or, if http proxies are 
+    involved, the address of a proxy server. We will also call this the 
+    \textbf{visit source}
+    \\
+    
+    \textbf{Timestamp:} The date and time at which the request was recieved.
+    \\
+    
+    \textbf{Resource:} A description of the resource that was requested.
+    \\
+    
+    \textbf{User Agent:} A string identifiying the visitor's user agent 
+    software. This usually consists of the name and version of the browser, 
+    crawler or toolkit that was used make the connection.
+    \\
+    
+    \textbf{Referer:} An URL describing the resource which referred to the local 
+    resource. (e.g. the URL of the page that contained the hyperlink to the 
+    local page).
+    \\
+    
+    Additionally to
     this \textit{primary} information, data may be gathered from the
     context of the visit: For example, a certain \verb$User-Agent$ header 
     may indicate a certain type of visitor (e.g. a crawler or bot), or a visit
@@ -90,86 +119,108 @@
     Britain. Both the primary and secondary information may be used for finding
     relationships.
     \subsection{System overview}
-      The system has three processing steps: Once a visit is received,
-      it will determine an URL that acts as a starting point.
-      Then multiple \textit{relation finder} instances will start to
-      look for URLs (of places) related to the starting place. In
-      the final step, the system will take all these URLs and assign an
-      \textit{rating} to them in order to mark out the places
-      which are the most interesting for the user. The results (ie. the
-      rated URLs) are then passed on to be displayed.
-      \begin{figure}[h]
+      When the system recieves a visit, it will first attempt to find one or 
+      more URLs that act as starting points for further processing. These 
+      starting points should have a close connection to the original visit since 
+      they will represent it during the following steps.
+      
+      The starting points will then be fed into a network of \textit{relation 
+      finders} that attempt find URLs of web places that are somehow related to 
+      the them. The \textit{relation finder} network is the central part of the 
+      system: It follows the implicit and explicit connections that link one 
+      place with it's neighbours and thus explores the virtual surroundings of 
+      the starting point.
+      
+      Each of the resulting URLs will finally be rated by a one or more 
+      \textit{rating functions} that try to determine the amount of interest the 
+      user may have in that particular web place. Once the URLs are rated they 
+      can be passed on to a display systemt that will present the web places to 
+      the user.
+      \begin{figure}[ht]
         \centering
 	\includegraphics[width=10cm]{steps_overview}
 	\caption{Major processing steps of DoorStep}
 	\label{steps_overview}
       \end{figure}
-    \subsection{Finding a starting place}
+    \subsection{Finding starting places}
        \begin{figure}[ht]
        \centering
 	 \includegraphics[width=10cm]{startingplace}
 	 \caption{Selecting a starting place}
 	 \label{startingplace}
        \end{figure}
-       The processing starts by looking for an URL of \textit{starting place}. 
-       The starting
-       place will \lq\lq represent\rq\rq\ the original visit in the next step,
-       since it is much easier to describe relations between different
-       places than between visits and places.
+       It is usually somewhat difficult to describe the relations that exist 
+       between web places and visits: A visit is fundamentally different from a 
+       web place, so they cannot easily be compared, different types of visits 
+       may relate to places in different ways and those relations are difficult 
+       to grasp algorithmically. 
        
-       To find an URL that can represent the original visit, we demand
-       that it must be \textbf{as close as possible to the origin of the visit}.
-       The meaning of \lq\lq close\rq\rq\ may vary for
-       different types of visits, but for visits originating from HTTP requests
-       it is reasonably easy to define:
+       Relations between web places, on the other hand, are fairly well 
+       understood (FIXME:Reference?). For this reason the system will first 
+       attempt to find one (or several) URLs of starting points which will 
+       represent the visit during the following processing steps. To represent a 
+       particular visit, a web place has to have some strong connection with it; 
+       the system demands that \textbf{a starting point must be as close as 
+       possible to the visit source}.
+       
+       The metric that defines the \lq\lq distance\rq\rq between a visit and 
+       place will vary for different types of visits and according to the 
+       information that is available. For a system where visits are HTTP 
+       requests made by machines with valid DNS host names we will use the 
+       following metric:
+       
        \begin{definition}
-       A HTTP request is closest to the URL describing the address of the
-       client.
+       \raggedright
+       Let  
+       \begin{center}
+       \verb$a_part[n].a_part[n-1]...a_part[1]$ 
+       \end{center}
+       and 
+       \begin{center}
+       \verb$b_part[m].b_part[m-1]...b_part[1]$ 
+       \end{center}
+       be the DNS names of two
+       hosts with their respective (domain name) parts, and $ n \geq m $.
+       
+       If \verb$a_part[x]$ = \verb$b_part[x]$ for all $x$ with 
+       $1 \leq x \leq p$ then the distance between the two hosts is 
+       $n - p$
        \end{definition}
-       This starting place may, however, have the drawback of not really 
-       being a
-       \lq\lq place\rq\rq in the sense that no server is running at the
-       address, and thus no resources will be served from there. (the place/URL 
-       is not \textit{alive}.) This may or may not be a problem in
-       the following processing, so we present an alternate definition of
-       \textit{close} that can be used if the starting URL has to be
-       \textit{alive}:
-       \begin{definition}
-       A HTTP request from a given DNS host is closer to URLs in the same
-       sub domain than to those in a different sub domain. (e.g. 
-       \verb$myhost.banana.hoogla.de$ is closer to 
-       \verb$otherhost.banana.hoogla.de$
-       than to \verb$otherhost.hoogla.de$, which in turn is still closer than
-       \verb$alien.alien.org$).
-       \end{definition}
-       Of course this definition of close requires that the client has a valid
-       DNS host name. If this is a not the case, 
-       one can define hosts in the same IP
-       subnet as \textit{close}, but it is very unlikely that hosts without an
-       DNS host names will be interesting places anyway.
-     \subsection{Finding related places}
-       The central step is to find URLs that are \textit{related} to the
-       starting URL. 
-       \begin{definition}
-       Two URLS $ u_1 $ and $ u_2 $ are \textit{related} 
-       ($ u_1 \leftrightarrow u_2 $) if they \textit{have a common
-       characteristic} $ c $. 
-       \end{definition}
-       Mathematically speaking, $ \leftrightarrow $ is an equivalency relation,
-       and both $ u_1 $ and $ u_2 $ are part of the equivalency class 
-       $ U_{\leftrightarrow} $
-       (of all URLs related by $ \leftrightarrow $). The definition makes no
-       further assumptions about the characteristic $ c $, which can be selected
-       by the user. Real-life relations of URLs could be things like 
-       \lq\lq Both URLs are in the same DNS domain\rq\rq\ or \lq\lq The
-       resources served by the URLs contain the keywords a and b\rq\rq . 
+       
+       \begin{example}
+       If the visit originated from a host called 
+       \verb$banana.hoogla.boogla.oogla.org$ then this host will have a distance 
+       of 0 to the visit. The host \verb$yellow.hoogla.boogla.oogla.org$ will 
+       have a distance of 1, \verb$chiquita.boogla.oogla.org$ a distance of 2 
+       and so on.
+       \end{example}
+       
+       Although this metric requires that the host to have a DNS hostname it 
+       would be easy to define a similiar one for hosts that only have IP 
+       addresses. In practice however it shows that most of the visit sources do 
+       have a valid DNS hostname, and those that don't are not particularly
+       useful anyway.
+       
+       With the given metric, the URL closest to 
+        
+       \subsection{Finding related places} The central step is to find URLs that 
+       are \textit{related} to the starting URL. \begin{definition} Two URLS $ 
+       u_1 $ and $ u_2 $ are \textit{related} ($ u_1 \leftrightarrow u_2 $) if 
+       they \textit{have a common characteristic} $ c $. \end{definition} 
+       Mathematically speaking, $ \leftrightarrow $ is an equivalency relation, 
+       and both $ u_1 $ and $ u_2 $ are part of the equivalency class $ 
+       U_{\leftrightarrow} $ (of all URLs related by $ \leftrightarrow $). The 
+       definition makes no further assumptions about the characteristic $ c $, 
+       which can be selected by the user. Real-life relations of URLs could be 
+       things like \lq\lq Both URLs are in the same DNS domain\rq\rq\ or \lq\lq 
+       The resources served by the URLs contain the keywords a and b\rq\rq . 
        
        For obvious practical reasons it is suggested that relations should also
        fulfil the following criteria: I must be reasonably easy to determine if
        two URLs are related or not and it be reasonably easy to find a
        substantial subset of $ U_{\leftrightarrow} $. 
        \\
-       \begin{figure}[h]
+       \begin{figure}[ht]
          \centering
 	 \includegraphics[width=10cm]{relations}
 	 \caption{Data flow through different relation finder instances}
@@ -334,7 +385,7 @@
       description format as an output.
       
       
-      \begin{figure}[h]
+      \begin{figure}[ht]
 \begin{verbatim}
 <visitlist>
   <visit>
@@ -354,7 +405,7 @@
         \caption{XML format for visits}
 	\label{visitxml}
       \end{figure}
-      \begin{figure}[h]
+      \begin{figure}[ht]
 \begin{verbatim}
 <url_list>
 <url>
