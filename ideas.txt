@@ -213,6 +213,8 @@ XML::Parser (needs expat toolkit!)
 SOFTWARE INSTALLED
 JDK 1.4.0
 JAKARTA ANT 1.4.1
+JAKARTA REGEXP 1.2
+XERCES 2
 
 BOOKS NEEDED:
 Perl Programming
