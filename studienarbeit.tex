@@ -415,6 +415,20 @@
       understand the respective XML format(s) and conforms to the contracts 
       given in the previous section it should be able to interact with all 
       other modules.
+    \subsection{User Display}
+      The testbed also contains a display architecture that shows a \lq\lq slide
+      show\rq\rq of the resulting web pages. The architecture consists of a
+      Java-driven web application using servlets and JSPs and requires only a
+      standard web browser as a front end. Alternatively, the Display may run a
+      small VisualBasic application that is directly driven by a Java server
+      process and offers some additional functionality.
+      
+      The display is meant to run on a separate screen in the user's enviroment
+      and change infrequently (i.e. every 2 to 10 minutes) to a new web place.
+      If the user is interested in a certain page he has the option to stop the
+      slide show and explore that page further (by following the hyperlinks on
+      the page). The slide show will automatically commence after a while.
+      (FIXME:Pictures)
     \subsection{Test Data}
       The test dataset is part of the HTTP log file from a research lab
       web server. The log file contains about 200.000 entries from a period of
@@ -435,10 +449,35 @@
       were referred to the site as the result of a web search (with the search
       string showing up in the \verb$Referer$ field).
     \subsection{Results}
+      For the trials we used an \textit{extractor} module implementing the
+      metric defined in (FIXME:Reference) to find living URLs, an
+      \textit{refiner} module searching the original URLs domain for certain
+      keywords and one following the hyperlinks of the original URL. The results
+      were rated by two \textit{refiner} modules implementing the rating
+      functions given in (FIXME:Reference). The input to the system consisted of
+      the 3500 unique and sucessful visits from the original log.
+      
+      Out of these, the \textit{extractor} module found about 1500 URLs that
+      were \textit{alive}. This is a reasonably good set of starting places,
+      however a first look at the data revealed that most of them were either
+      ISP portal pages or homepages of academic institutions. While the latter
+      are in most cases good starting points for further processing, ISP portal
+      are rather unspecific and uninteresting in the context of this system.
+      This behaviour is mostly due to the fact that many of the \lq\lq
+      mundane\rq\rq\ (i.e. non-academic) visitors are \lq\lq homeless\rq\rq\ in
+      the sense that the do not have their own web place -- and even if they do
+      they often enter the web from a place that is far removed from their own
+      place. In a purely academic setting (like ours) this problem is less
+      pressing since the user's home place (or -page) is usually loacted within
+      the same network from which the user enters the web. This \lq\lq homeless
+      user problem\rq\rq\ has already been observed in \cite{webaware}, and some
+      solutions have been proposed; this is definitely on of the points for
+      further research.
       
       
-  \section{Conclusions}
-  
+  \section{Conclusions and Further Work}
+     We have shown that the DoorStep system is well suited to show a web host
+     his virtual surroundings, and the impressions of the
   \begin{thebibliography}{99}
     \bibitem{webaware} Hans-W. Gellersen and Albrecht Schmidt.
     Look who's visiting: supporting visitor awareness in the web.
