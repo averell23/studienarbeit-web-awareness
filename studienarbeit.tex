@@ -61,7 +61,7 @@
     
     The notion of \emph{relations} between web places is not an entirely new 
     one: Relations by hyperlinks and web communities have already 
-    been the subect of research by Flake\cite{flake}, Gibson\cite{gibson}, 
+    been the subject of research by Flake\cite{flake}, Gibson\cite{gibson}, 
     Larson\cite{larson} and others. 
     Adamic and Adar\cite{links}, for example, not only found 
     evidence that a hyperlink indicates a social relation, but also that 
@@ -76,7 +76,7 @@
     meaningful relations between web places do exist but does not concern itself 
     with the exact nature of those relations -- in fact, the system is designed 
     to work with almost all imaginable kinds of relations. What we propose is an 
-    efficient way to exploit exisiting relations, connect them to visit events 
+    efficient way to exploit existing relations, connect them to visit events 
     and prepare the results in way that makes it easy to present them to an end 
     user.
     
@@ -121,13 +121,13 @@
     \textbf{visit source}
     \\
     
-    \textbf{Timestamp:} The date and time at which the request was recieved.
+    \textbf{Timestamp:} The date and time at which the request was received.
     \\
     
     \textbf{Resource:} A description of the resource that was requested.
     \\
     
-    \textbf{User Agent:} A string identifiying the visitor's user agent 
+    \textbf{User Agent:} A string identifying the visitor's user agent 
     software. This usually consists of the name and version of the browser, 
     crawler or toolkit that was used make the connection.
     \\
@@ -145,7 +145,7 @@
     Britain. Both the primary and secondary information may be used for finding
     relationships.
     \subsection{System overview}
-      When the system recieves a visit, it will first attempt to find one or 
+      When the system receives a visit, it will first attempt to find one or 
       more URLs that act as starting points for further processing. These 
       starting points should have a close connection to the original visit since 
       they will represent it during the following steps.
@@ -192,7 +192,7 @@
        \end{figure}
        Relations between web places are easy to describe and handle. Relations
        between visits, visitors and places, however, are somewhat harder to
-       grasp. To avoid the complications of modeling those relations the system
+       grasp. To avoid the complications of modelling those relations the system
        will pick one (or several) web places that act representatives, or
        proxies, for the visit. These are the \textit{starting places} of the 
        relation finding process,
@@ -200,7 +200,7 @@
        start exploring the edges. 
        
        Each starting point must have a close connection to the visit that it is
-       ment to represent. In terms of the DoorStep system we demand that a
+       meant to represent. In terms of the DoorStep system we demand that a
        starting point should be \textit{as close as possible} to the visit it is
        representing. The metric that measures the \lq\lq distance\rq\rq\ between
        a visit and a web place will vary depending on the type of visit and the
@@ -214,7 +214,7 @@
        \cite{dns} and with the subdomain tokens \verb$a_part[]$ and 
        \verb$b_part[]$ is given by the number of matching right-hand tokens.
        \end{definition}
-       A similiar metric can easily be construed for hosts that have no
+       A similar metric can easily be construed for hosts that have no
        qualified DNS name but only a network address, although we found that
        most of the visit source do have a qualified hostname and those that do
        not weren't particularly useful either.
@@ -268,7 +268,7 @@
      \subsection{Finding related places} 
        A network of \textit{relation finders} is the central processing unit of 
        the DoorStep system. A \textit{relation} finder is an object that will 
-       examine a web place (an URL) and attemps to find other URLs that are 
+       examine a web place (an URL) and attempts to find other URLs that are 
        related to it. In the following definitions, the term \lq\lq URL\rq\rq\ 
        is used as a convenient shorthand for \lq\lq web place\rq\rq . However, 
        these URL objects do not only contain the resource locator as described 
@@ -312,7 +312,7 @@
 
        When a relation finder $ F $ examines an URL $ u_x $, it will attempt to 
        find a set of URLs to which $ u_x $ is related by some relation 
-       $ \rightarrow_F $. It isn't neccessary that the relation finder finds 
+       $ \rightarrow_F $. It isn't necessary that the relation finder finds 
        \emph{all} relatives of $ u_x $, a subset of $ U_{\rightarrow_F}(u_x) $ 
        will suffice. In practice, the relation finder will only be able to find 
        all relatives if $ U_{\rightarrow_F}(u_x) $ can be computed from $ u_x $ 
@@ -324,7 +324,7 @@
        candidates it will then select the relatives of $ u_x $. In practice the 
        heuristic will often include the use of a web search engine like 
        \cite{google}. Those engines have several properties that make the well 
-       suited for relation finded an will be discussed in detail in the next 
+       suited for relation finder an will be discussed in detail in the next 
        section.
        \begin{figure}[ht]
          \centering
@@ -383,7 +383,7 @@
        searches but allows empower the user to restrict the results to certain 
        languages, resource types or domain names. Some, like Google\cite{google} 
        even maintain the notion of related pages themselves, in features like 
-       \lq\lq Find related pages\rq\rq\ or \lq\lq Find similiar\rq\rq . 
+       \lq\lq Find related pages\rq\rq\ or \lq\lq Find similar\rq\rq . 
   
        Search engines will also use sophisticated ranking techniques, and 
        although the search engine rankings may or may not be useful in the 
@@ -476,7 +476,7 @@
     comprehensive examples of relations between web places and explore their 
     possible meaning. We expected that most of the relations used in the 
     DoorStep system will be taken from independent research and that the quality 
-    of such relations will be extensively analyzed in papers like \cite{links}.
+    of such relations will be extensively analysed in papers like \cite{links}.
     \\
     
     \textbf{Relation by hyperlinks:} These are probably the best understood and 
@@ -484,7 +484,7 @@
     make them interesting to use in the DoorStep system: Hyperlinks are usually 
     set by people (rather than machines) and therefore denote social rather than 
     technical relations between web places. Adamic and Adar showed that 
-    social groups can be identified by analyzing groups of hyperlinked web 
+    social groups can be identified by analysing groups of hyperlinked web 
     pages\cite{links}. Hyperlinks are also very easily handle; no additional 
     information is 
     needed to follow a hyperlink to another web page and thus the respective 
@@ -492,7 +492,7 @@
     \\
     
     \textbf{Relation by domain:} DNS (sub-)domains usually denote geographic or 
-    organizational groups. These can be very broad like the \verb$.com$ top 
+    organisational groups. These can be very broad like the \verb$.com$ top 
     level domain, or quite specific like the \verb$computing.lancs.ac.uk$ domain 
     which contains the machines of the Lancaster University's computing 
     department. Finding web places within the same domain is not as 
@@ -515,7 +515,7 @@
     
     \textbf{Relation by referring search query:} As explained above, the 
     contents of the \verb$Referer:$ header (if existent) are retained within the 
-    starting URL found in the first step. When a visitor was refered by a search 
+    starting URL found in the first step. When a visitor was referred by a search 
     engine, the \verb$Referer:$ header will usually not only contain the 
     engine's URL, but the complete query string. This information allows a 
     relation finder to reproduce the search query and find out what other web 
@@ -532,11 +532,11 @@
     easily exploit them -- simply by querying the search engine.
     \\
     
-    \textbf{Relation by similiar hostname:} Some researchers (like 
+    \textbf{Relation by similar hostname:} Some researchers (like 
     \cite[Link Affiliation]{experts}) 
-    treat web places with similiar host names as related. For example they 
+    treat web places with similar host names as related. For example they 
     assume that hostnames with the same prefix (like \verb$www.apple.com$ and
-    \verb$www.apple.co.uk$) belong to the same organization. A heuristic for 
+    \verb$www.apple.co.uk$) belong to the same organisation. A heuristic for 
     finding this kind of relation could be somewhat more complicated since most 
     commercial search engines lack these kind of query options.
     \\
@@ -549,14 +549,14 @@
   \section{Examples of rating functions}
     There is a lot of research on rating functions, and many different 
     approaches have been published, like PageRank\cite{page}, 
-    Topic Destillation\cite{kleinberg} or
+    Topic Distillation\cite{kleinberg} or
     anchor-text analysis\cite{chakrabarti}. 
     Although rating functions from 
     the literature may perform well, they are usually also quite complex and 
     require a lot of processing. Many, like the popular Link 
     Rating\cite{page}\cite{kleinberg}
     even require a more or less complete web index, something that is difficult 
-    to build and maintain outside a lab enviroment. For this reason we will not 
+    to build and maintain outside a lab environment. For this reason we will not 
     discuss those functions here, and instead present some simpler, home-grown 
     functions that are easy to implement and still perform reasonably well 
     within the DoorStep system. Nonetheless, it is always possible to enhance 
@@ -586,15 +586,21 @@
     \[
       f_{\mbox{key}}(u) = \sum_{k_i \in u} \frac{w(n(k_i))}{n}
     \]
-    In the testbed implementation we then used a logarithmical function for 
-    $w()$ that will quickly increase with the first few occurences of a 
-    keyword but raise the rating more slowly if a huge number of occurences is 
+    In the testbed implementation we then used a logarithmic function for 
+    $w()$ that will quickly increase with the first few occurrences of a 
+    keyword but raise the rating more slowly if a huge number of occurrences is 
     involved:
     \[
-      - \frac{1}{log((n - \alpha) \beta) + 1}
+      w_1(n) = - \frac{1}{log((n - \alpha) \beta) + 1}
+    \]
+    \[
+      w(n) = \left\{
+      \stackrel{w_1(n) \hspace{2mm} | \hspace{3mm} 0 \leq w_1(n) \leq 1}
+      {0 \hspace{3mm} \mbox{otherwise}}
+      \right.
     \]
     It showed that for most pages this method worked well, and with well-chosen 
-    keywords and could distiguish pages that only dealt with the topic 
+    keywords and could distinguish pages that only dealt with the topic 
     marginally (like researcher's personal home pages) with those that covered 
     it extensively (like conference home pages).
     \\
@@ -615,7 +621,7 @@
   \section{Test Implementation}
     \subsection{Testbed Architecture}
       In order to evaluate our assumptions, we implemented a testbed that 
-      allowed us to test the DoorStep system in a real-life enviroment, using 
+      allowed us to test the DoorStep system in a real-life environment, using 
       the relations and rating functions given in the examples sections (FIXME: 
       Refer to sections).
       
@@ -683,7 +689,7 @@
       with a maximum degree of relationship. If a URL is encountered with a 
       higher degree of relationship the refiner shall \textbf{not} attempt to 
       find URLs that are related to it -- the URL must be passed on to the 
-      output unmodified. This property allows to mimick the flexible setup as in 
+      output unmodified. This property allows to mimic the flexible setup as in 
       figure \ref{relations} while the \textit{relation finders} are only 
       connected in a simple daisy-chain. (\textit{Refiners} acting as rating 
       functions must ignore the degrees of relationship). It is also required 
@@ -717,7 +723,7 @@
       small VisualBasic application that is directly driven by a Java server
       process and offers some additional functionality.
       
-      The display is meant to run on a separate screen in the user's enviroment
+      The display is meant to run on a separate screen in the user's environment
       and change infrequently (i.e. every 2 to 10 minutes) to a new web place.
       If the user is interested in a certain page he has the option to stop the
       slide show and explore that page further (by following the hyperlinks on
@@ -732,16 +738,16 @@
       For a first user study we plan to use this software on a panel computer 
       that can easily be fitted in the user's surroundings. The machine is 
       equipped with a touch-sensitive panel for intuitive user interaction and 
-      should easily blend into any office enviroment. This kind of ambient 
+      should easily blend into any office environment. This kind of ambient 
       display should be unobtrusive to the user while at the same time enabling 
       him to check his web surroundings whenever he chooses to.
-      (FIXME:Screenshots,Picture)
-    \subsection{Walk-Trough Scenario}
-      In this small scenario we will follow the way that three visit events take 
-      through the system. We will see how the visits are handled and how related 
-      web places are found. Our example system will be set up in the following 
-      way (line numbers given for reference only):
-      \begin{verbatim}
+      (FIXME:Screen shots,Picture)
+  \section{Walk-Trough Scenario}
+    In this small scenario we will follow the way that three visit events take    
+    through the system. We will see how the visits are handled and how related 
+    web places are found. Our example system will be set up in the following 
+    way (line numbers given for reference only):
+    \begin{verbatim}
 010 extractor = new ExtractingChain(dataSource);
 020 String keywords = "wearable,ubicomp";
 030  
@@ -759,25 +765,208 @@
 150 KWInterestRefiner kwr = new KWInterestRefiner(); 
 160 kwr.setKeywords(keywords); 
 170 extractor.addRefiner(mkr); 
-        \end{verbatim} 
-        The \verb$ExtractingChain$ in line 10 is an utility object that will 
-        connect the Extractor and several refiners. The \verb$StraightExtractor$ 
-        in line 40 implements the algorithm introduced in section FIXME:REF, and 
-        it's prefilters (lines 50 and 60) will discard visits that come from the 
-        local network, or any automated web agent.
-        
-        The \verb$SearchingRefiner$ in line 90 will search for URLs in the same 
-        domain as the starting point and the \verb$LinkRefiner$ (line 130) will 
-        follow hyperlinks.
-        
-        Finally, the \verb$KWInterestRefiner$ in Line 150 will use the rating 
-        function introduced in FIXME:REF to rate the URLs.
+      \end{verbatim} 
+      The \verb$ExtractingChain$ in line 10 is an utility object that will 
+      connect the Extractor and several refiners. The \verb$StraightExtractor$ 
+      in line 40 implements the algorithm introduced in section FIXME:REF, and 
+      it's prefilters (lines 50 and 60) will discard visits that come from the 
+      local network, or any automated web agent (the local network for this
+      example is \verb$lancs.ac.uk$).
+      \\
+      The \verb$SearchingRefiner$ in line 90 will search for URLs in the same 
+      domain as the starting point and the \verb$LinkRefiner$ (line 130) will 
+      follow hyperlinks.
+      \\
+      Finally, the \verb$KWInterestRefiner$ in Line 150 will use the rating 
+      function introduced in FIXME:REF to rate the URLs.
+    \subsection*{Starting up}
+      The visits are first recorded in the web server's log file, and will read
+      like this (lines have been abbreviated):
+      \begin{verbatim}
+dyn007.dhcp.lancs.ac.uk [30/Nov/2001:17:00:45] "GET /~kristof HTTP/1.0"
+teco88mc.teco.uni-karlsruhe.de [30/Nov/2001:17:04:33] "GET /~kristof HTTP/1.0"
+cw01.dd1.srv.t-online.de dyn007 [30/Nov/2001:17:19:12] "GET /~kristof HTTP/1.0"
+      \end{verbatim}
+      The first visit is one from our local network (\verb$lancs.ac.uk$), the
+      second comes from a research institution (the TeCo in Karlsruhe) and the
+      second is a visitor from a big commercial service provider (T-Online in
+      Germany).
+      
+      Before the actual processing starts, the log file is read by a small
+      script that converts it into an XML file readable by the toolkit:
+      \begin{verbatim}
+<visitlist>
+  <visit>
+    <type>Html</type>
+    <timestamp>30:11:2001:17:00:45</timestamp>
+    <visitor>
+      <class>person</class>
+      <class>local</class>
+    </visitor>
+    <resource>~kristof/</resource>
+    <host>dyn007.dhcp.lancs.ac.uk</host>
+    <location_code>223</location_code>
+  <visit>
+  <visit>
+    ...
+    <visitor>
+      <class>remote</class>
+      ...
+    </visitor>
+    <host>teco88mc.teco.uni-karlsruhe.de</host>
+    ...
+  </visit>
+  <visit>
+    ...
+    <visitor>
+      <class>remote</class>
+      ...
+    </visitor>
+    <host>cw.dd1.srv.t-online.de</host>
+    ...
+  </visit>
+</visitlist>
+      \end{verbatim}
+      In the XML file, each \verb$<visit>$ entry corresponds to one line of the
+      log file, and most of the tags contain one of the log file's data fields
+      (the XML may contain additional fields, e.g. for \verb$Referer:$ or 
+      \verb$User-Agent:$ information). The \verb$<visitor>$ tag already
+      contains the classification of the visit: It indicates if the visit came
+      from the local network (\textit{local} or \textit{remote}) and whether the
+      visitor was likely a real person or an automated web agent. The
+      \verb$<type>$ tag indicates the type of the visit, and is to be used in
+      further extensions.
+    \subsection{Starting Point Extraction}
+      The \verb$StraightExtractor$ will now read the visits from the XML file,
+      passing each visit through it's internal filters before processing. The
+      first visit will be dropped by the \verb$LocalVisitFilter$, since it comes
+      from our own network. The other two visits will pass and the extractor
+      will attempt to find \textit{living} start URLs, using the algorithm from
+      Section FIXME:REF. The possible starting URLs will be checked in the
+      order:
+      \begin{itemize}
+        \item{\verb$teco88mc.teco.uni-karlsruhe.de$}
+        \begin{itemize}
+          \item{\verb$teco88mc.teco.uni-karlsruhe.de$ (not alive)}
+          \item{\verb$www.teco.uni-karlsruhe.de$ (alive)}
+          \item{\verb$www.uni-karlsruhe.de$ (alive)}
+        \end{itemize}
+        \item{\verb$cw.dd1.srv.t-online.de$}
+        \begin{itemize}
+          \item{\verb$cw.dd1.srv.t-online.de$ (not alive)}
+          \item{\verb$www.dd1.srv.t-online.de$ (not alive)}
+          \item{\verb$www.srv.t-online.de$ (not alive)}
+          \item{\verb$www.t-online.de$ (alive)}
+        \end{itemize}
+      \end{itemize}
+      As we can see the algorithm works well on the research visitor, finding
+      both the research institute's homepage and the university homepage. For
+      the ISP visitor, on the other hand, the algorithm only finds the ISP's
+      homepage.
+      
+      The extractor will then encode it's results in XML again (we only show the
+      first URL in the XML file):
+      \begin{verbatim}
+<url_list>
+  <url> 
+    <name>http://www.teco.uni-karslruhe.de/</name> 
+    <location_code>54</location_code> 
+    <timestamp>30:11:2001:17:00:45</timestamp> 
+    <degree>0</degree> 
+  </url> 
+  <!-- Other URLs not shown in example --> 
+</url_list>
+      \end{verbatim}
+      Since the URLs in this file are the descriptions of the starting places,
+      they have a degree (of relationship) of 0. Had the original visit
+      \verb$Referer:$  fields or similar information, this would also have been
+      preserved in the URL XML file.
+    \subsection{Searching the domain}
+      The starting points will now be fed into the \verb$SearchingRefiner$,
+      which will look for other web places in the same DNS domain. For this the
+      refiner will query a search engine, using the pre-configured keywords and
+      restricting the search to the domain of the starting place. The current
+      implementation of the refiner is very simple; it will always use the two
+      rightmost tokens of the host name as the domain. 
+      
+      With this method the refiner in our example will (for the first URL)
+      create a query that is equivalent to \lq\lq Search the domain
+      \verb$uni-karlsruhe.de$ with the keywords ubicomp and wearable\rq\rq .
+      This search will return several ubicomp-related pages at the University of
+      Karlsruhe, including the homepage of the ubicomp student group at 
+      \textit{http://www.uni-karlsruhe.de/AG-Ubicomp.htm} (the URL
+      was changed for better readability). The refiner will parse the search
+      results and encode them into XML (file abridged again):
+      \begin{verbatim}
+<url_list>
+  <url> 
+    <name>http://www.teco.uni-karslruhe.de/</name> 
+    <location_code>54</location_code> 
+    <timestamp>30:11:2001:17:00:45</timestamp> 
+    <degree>0</degree> 
+  </url> 
+  <url>
+    <name>http://www.uni-karlsruhe.de/AG-Ubicomp.htm</name> 
+    <timestamp>30:11:2001:17:00:45</timestamp> 
+    <degree>1</degree> 
+  </url>
+  <!-- Other URLs not shown in example --> 
+</url_list>
+      \end{verbatim}
+      We see that the newly found URLs have a degree of relationship of 1
+      towards the original starting places and that the original starting places
+      are also in the refiner's output. The latter is done by most refiners, no
+      matter what relation they work on, in order not to loose interesting web
+      places. If this behaviour is not desired, the refiner may either allow the
+      user to disable it during runtime or disable it permanently.
+      
+      When we look at the results of the two searches that the refiner performed
+      (one in the \verb$uni-karlsruhe.de$ domain and one in \verb$t-online.de$)
+      we see that the search in the university's domain found many
+      research-related documents, while on T-Online we found commercial pages
+      with product reviews and the like. This behaviour is expected: Each kind
+      of pages reflects a different online \lq\lq territory\rq\rq\ the visitor
+      came from.
+    \subsection{Following the links}
+      The next refiner in the chain is the \verb$LinkRefiner$. It will attempt
+      to read the resources of all the URLs in the input file and, if the
+      resources are HTML pages, follow the hyperlinks contained in them.
+      
+      For example, when the refiner encounters the ubicomp group's homepage, it
+      will find links to the professors, the home page of the corresponding
+      lecture, to researchers whose work will be presented and to other groups.
+      The T-Online product review pages contain links to in-depth articles,
+      photo collections, small movies and to the manufacturer of the products.
+      
+      A unresolved problem with both kinds of pages is that the \lq\lq
+      framework\rq\rq\ of the page (i.e. the navigation bars) contain very
+      generic hyperlinks that aren't necessarily related to the page's content
+      and are not especially useful for the system.
+      Nevertheless following hyperlinks is quite effective, and one of the
+      researchers linked on an institute's homepage may even be the virtual home
+      of the original visitor.
+    \subsection{Rating and Display}
+      All URLs will finally be passed through the \verb$KWInterestRefiner$, that
+      calculates a rating for each of them. The Rating will then be written back
+      to the XML in an \verb$<interest>$ tag. 
+      
+      Although the rating function works reasonably well with many pages, it has
+      one major drawback: Web Places can be interesting to the user although
+      they aren't directly related to the keywords of the rating function. In
+      fact, many places that are found by other means than a web search receive
+      a rating of 0. While the best way to address this problem is to implement
+      better and more adaptive rating functions we can work around it by
+      introducing an amount of randomisation into the display. Pages with high
+      ratings are preferred by the system but pages with inferior ratings will
+      still be shown. In this way the user will not only get information
+      directly related to the predefined topics, but also pages like those of
+      manufacturers that have related products.
   \section{Test System Performance} 
     Although a formal user study has yet to be planned, we did 
     preliminary tests on the system in two ways: First we installed the JSP 
     server on a machine available to the research group, and fed it with the 
     log data from our own web server (at 
-    \textit{http://ubicomp.lancs.ac.uk/). This allowed us not only to test 
+    \textit{http://ubicomp.lancs.ac.uk/)}. This allowed us not only to test 
     the long-term stability of the software, but also to observe if and how 
     the system would be used. In many cases we were quite surprised about 
     the web places found by the system, and most of them were related to our 
@@ -817,7 +1006,7 @@
       keywords and one following the hyperlinks of the original URL. The results
       were rated by two \textit{refiner} modules implementing the rating
       functions given in (FIXME:Reference). The input to the system consisted of
-      the 3500 unique and sucessful visits from the original log.
+      the 3500 unique and successful visits from the original log.
       
       Out of these, the \textit{extractor} module found about 1500 URLs that
       were \textit{alive}. This is a reasonably good set of starting places,
@@ -830,7 +1019,7 @@
       the sense that the do not have their own web place -- and even if they do
       they often enter the web from a place that is far removed from their own
       place. In a purely academic setting (like ours) this problem is less
-      pressing since the user's home place (or -page) is usually loacted within
+      pressing since the user's home place (or -page) is usually located within
       the same network from which the user enters the web. This \lq\lq homeless
       visitor problem\rq\rq\ has already been observed in \cite{webaware}, and 
       some; this will be an issue for further research.
@@ -847,7 +1036,7 @@
       also found that places related to well-rated URLs 
       * Will they also rank well?
   \section{Privacy: Reassuring the Visitors}
-    A system that, like DoorStep, collects and analyzes user data most always 
+    A system that, like DoorStep, collects and analyses user data most always 
     take privacy considerations into account. 
     
     In practice, usage data falls into two broad categories: Statistical usage 
@@ -897,25 +1086,25 @@
     
     FIXME:QUOTE
     
-    If the DoorStep (or a similiar) system sees widespread use, the safest and 
+    If the DoorStep (or a similar) system sees widespread use, the safest and 
     most honest thing to do is to include some option into the visitors user 
     agent to disable the DoorStep processing, and the user agent would then 
     signal DoorStep to ignore the visit.
   \section{Conclusions and Further Work} In this work we showed that, using 
     the notion of \textit{relations} between web places, it is possible to build 
-    a system that can help to visualize the connections between a site and the 
-    visitors. The system should renew the hosts' interest in maintaing his own 
+    a system that can help to visualise the connections between a site and the 
+    visitors. The system should renew the hosts' interest in maintaining his own 
     web place and, by allowing a look into the virtual surroundings, give new 
-    incentives for improvements. The test installation has been well recieved 
-    within the group, and the results were interesting and suprising. On one 
-    occation a researcher even messaged us if we could \lq\lq wind back\rq\rq\ 
+    incentives for improvements. The test installation has been well received 
+    within the group, and the results were interesting and surprising. On one 
+    occasion a researcher even messaged us if we could \lq\lq wind back\rq\rq\ 
     the slide show to an interesting page that he saw -- this feature will be 
     implemented in a future version.
     
     For interested users we will also keep a public DoorStep web server running
     so that everyone with a spare machine will be able to use the system.
     
-    Intial user reactions within the reasearch group were positive and we now
+    Initial user reactions within the research group were positive and we now
     plan to conduct a small user study that will allow us to study users
     reactions over the period of a few weeks. We hope to get an impression on how
     the use of the DoorStep system changes the host's attitude towards his own
@@ -924,7 +1113,7 @@
     
     In the future we plan to make the DoorStep system more adaptive so that
     rather than relying on a fixed set of keywords it will learn the user's
-    preferences and modify it's behaviour in different enviroments. We also need
+    preferences and modify it's behaviour in different environments. We also need
     to fix the \lq\lq homeless visitor problem\rq\rq : The most permanent
     solution would be for the visitor to supply his own home URL \cite{webaware},
     through an additional HTTP header field, although this would require
@@ -942,7 +1131,7 @@
      http://www10.org
     \bibitem{flake} C. Flake, S. Lawrence and C. Lee Giles.
     Efficient identification of web communities.
-    Sixth ACM SIGKDD Internation Conferenc on Knowledge Discovery and Data 
+    Sixth ACM SIGKDD International Conference on Knowledge Discovery and Data 
     Mining, Boston, MA, 2000. 
     pp. 150-160
     \bibitem{gibson} D. Gibson, J. Kleinberg and P. Raghavan.
@@ -964,7 +1153,7 @@
     Proceedings of ACM SIGIR Workshop on Hypertext Information Retrieval on
     the Web, 1998.
     \bibitem{ambient} Hans-W. Gellersen, Albrecht Schmidt and Michael Beigl.
-    Ambient Media for Peripherial Information Display.
+    Ambient Media for Peripheral Information Display.
     \bibitem{windows} Liechti O, Siefer N and Ichikawa T.
     A non-obtrusive User Interface for Increasing Social Awareness on the 
     World Wide Web. Personale Technologies 3 (1\&2), 1999.
