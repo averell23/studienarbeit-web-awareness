@@ -43,59 +43,6 @@
     simply make requests like \lq Find out what this visitor was 
     interested in and give me a list of people who share this
     interest\rq .} 
-  \section*{Available Data}
-    Before going into the details it may be a good idea to look
-    at the data the system will work with. To start with there
-    is the information contained in the \textit{visits}, including
-    things like:
-    \begin{itemize}
-    	\item{The \textit{origin} of the visit. (e.g.
-    	      client's net address)}
-    	\item{The \textit{resource} that was requested. (The document
-    	      the visitor tried to download)}
-    	\item{The \textit{time and date} of the visit.}
-    	\item{The \textit{result} of the visit. (Successful or not?)}
-    	\item{The \textit{referring entity}. (e.g. from the http REFERER field)}
-    	\item{The \textit{user agent} that was used for the visit.}
-    \end{itemize}
-    This is the \textit{primary} data form the visit itself. However in
-    a web enviroment there are a number of secondary data sources which
-    the system may use:
-    
-    \textbf{Information available through the context of the visit:}
-    This kind of information is not directly recorded with the visit,
-    but is easily available when one has additional knowledge of the
-    context. Some examples would include:
-    \begin{itemize}
-    	\item{The geographical location. (Can be roughly deduced if 
-    	      one has an idea about country-top-level-domains)}
-    	\item{The type of visitor (e.g. human/machine/attacker,
-    	      can be known by looking at the user agents and
-    	      at patterns in the requests)}
-    	\item{Search queries contained in the REFERER.}
-    \end{itemize}
-    
-    \textbf{Information available through the web:} This includes
-    all kinds of web services (most notably: search engines) as
-    well as the information gained by actually querying a given
-    URL. The latter will yield information such as:
-    \begin{itemize}
-    	\item{The fact if there is a web server answering.}
-    	\item{The type of document served by that machine.}
-    	\item{The document itself.}
-    	\item{In the document: Meta descriptions (e.g. keywords)
-    	      and links to other pages.}
-    \end{itemize}
-    
-    \textbf{Information available through the network:} This is
-    provided by services of the underlying network. This can
-    be things like network routes (traceroute), names and addresses
-    (DNS) or administranational information (WHOIS).
-    
-    \textbf{Information from the visitor:} It is imaginable that
-    a visitor provides additional information upon each visit. 
-    This could be things like the visitor's homepage, the 
-    bookmark collection or simply the history of accesses.
   \section*{System overview}
     // FIXME: System figure
   \section*{Step one: Find the starting point}
@@ -158,7 +105,8 @@
      look for different kinds of relationships, simply by
      repeating this step.
      
-     //FIXME: Relation finding flow
+     We do \textbf{not} demand that this steps finds \textit{all}
+     related URLs (since this would be quite impossible).
      
      \subsection*{Examples for relations between URLs}
        \begin{itemize}
@@ -185,8 +133,45 @@
        
        The process can be repeated to find URLs related in the 
        $ 3^{rd} $ and $ 4^{th} $ degree, and so on.
+     \subsection*{Multiple instances}
+       The system may contain any number of instances searching
+       for relations\footnote{An \textit{instance} in this
+       context is a program entity that takes a URL (or a
+       set of URLs) and finds URLs that are related to it (them)
+       by a given relation.}. There may be different instances
+       for different relations, and there may also be multiple
+       instances looking for the same relation. 
        
+       The starting URL may be fed into any of those instances
+       (which will the find URLs related in the $ 1^{st} $
+       degree). 
        
+       Each instance may pass it's output on to the next stage
+       of processing, or feed it into one or more other instance(s) 
+       (including itself), which will then find URLs with higher
+       degrees of relationship. The system does not demand that
+       instances that are \lq chained\rq in this way work with
+       the same relations. 
+       
+       This kind of design allows for a very flexible configuration
+       of this phase, making detailled decisions about the kind
+       of relationships the system is looking for.
+       Nonetheless, it may prove that overly complex configurations
+       will not prove useful for real-world implementations.
+     \subsection*{Note on finding relations in the real world}
+       While in theory the nature of the relationships is only
+       limited by the user's phantasy, a real-world implementation
+       has to work on the available data\footnote{See Appendix for
+       description of the available data}. Relations used in a
+       real-world system should therefore match the following
+       criteria:
+       \begin{itemize}
+         \item{Given the available data, it must be possible to
+	       tell wether two URLs are related or not}
+	 \item{It must be possible to find a set of 
+	       URLs that \textit{may} be related with
+	       a resonable effort.}
+       \end{itemize}
   \section*{Step three: Finding URLs of interest}
     In the previous step were looking for a (probably rather large)
     set of URLs which are all somehow related to the original visit.
@@ -219,5 +204,55 @@
     
     Filtering is mainly a way to remove unwanted \lq noise\rq\ and
     speed up processing, it does not change the working of the
-    system in a significant way.
+    system in a significant way
+  \newpage
+  \section*{Appendix: Available Data}
+  \subsection*{Primary data from the visits}
+    This is the \textit{primary} data form the visit itself.
+    \begin{itemize}
+    	\item{The \textit{origin} of the visit. (e.g.
+    	      client's net address)}
+    	\item{The \textit{resource} that was requested. (The document
+    	      the visitor tried to download)}
+    	\item{The \textit{time and date} of the visit.}
+    	\item{The \textit{result} of the visit. (Successful or not?)}
+    	\item{The \textit{referring entity}. (e.g. from the http REFERER field)}
+    	\item{The \textit{user agent} that was used for the visit.}
+    \end{itemize}
+   \subsection*{Secondary data}
+    This is secondary data, which is not recorded with the visits
+    but available through other means (in a web system).
+    \\
+    \textbf{Information available through the context of the visit:}
+    This kind of information is not directly recorded with the visit,
+    but is easily available when one has additional knowledge of the
+    context. Some examples would include:
+    \begin{itemize}
+    	\item{The geographical location. (Can be roughly deduced if 
+    	      one has an idea about country-top-level-domains)}
+    	\item{The type of visitor (e.g. human/machine/attacker,
+    	      can be known by looking at the user agents and
+    	      at patterns in the requests)}
+    	\item{Search queries contained in the REFERER.}
+    \end{itemize}
+    \textbf{Information available through the web:} This includes
+    all kinds of web services (most notably: search engines) as
+    well as the information gained by actually querying a given
+    URL. The latter will yield information such as:
+    \begin{itemize}
+    	\item{The fact if there is a web server answering.}
+    	\item{The type of document served by that machine.}
+    	\item{The document itself.}
+    	\item{In the document: Meta descriptions (e.g. keywords)
+    	      and links to other pages.}
+    \end{itemize}
+    \textbf{Information available through the network:} This is
+    provided by services of the underlying network. This can
+    be things like network routes (traceroute), names and addresses
+    (DNS) or administranational information (WHOIS).
+    \\
+    \textbf{Information from the visitor:} It is imaginable that
+    a visitor provides additional information upon each visit. 
+    This could be things like the visitor's homepage, the 
+    bookmark collection or simply the history of accesses.
 \end{document}
