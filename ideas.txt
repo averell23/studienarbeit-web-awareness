@@ -28,6 +28,11 @@ Daniel Hahn
 		- By user feedback 
 	* Display methods
 
+* HOW TO EXAMINE THE RESULTS
+	* Count number of results
+	* Count number of relevant (== on topic) results
+	* Count number of "interesting" results
+
 * ARCHITECTURE IDEAS:
 	* Monolithic:
 		* Just one engine
